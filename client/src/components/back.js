@@ -16,6 +16,7 @@ const BackBox = styled.div`
   background-color: #aaa;
   color: #fff;
   transition: 0.5s;
+  cursor: pointer;
   &:hover {
     background-color: transparent;
     color: black;

@@ -1,9 +1,10 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import emailjs from '@emailjs/browser';
 import styled from "styled-components";
 
-import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md"
+import { MdArrowBackIos, MdArrowForwardIos, MdCheckCircleOutline, MdCheckCircle, MdChangeCircle, MdOutlineCheckCircle, MdOutlineFileUpload, MdUploadFile } from "react-icons/md"
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 
 const ContactBox = styled.div`
@@ -96,17 +97,30 @@ const Form = styled.div`
     position: absolute;
     top: 36%;
   }
+  .bn {
+    position: absolute;
+    bottom: 30%;
+  }
   .url {
     position: absolute;
     bottom: 16%;
+  }
+  .another {
+    position: absolute;
+    bottom: 30%;
   }
   .cbtitle {
     font-size: 20px;
     font-weight: bold;
     position: absolute;
-    top: 18%;
+    top: 15%;
   }
-
+  .filetitle {
+    font-size: 20px;
+    font-weight: bold;
+    position: absolute;
+    top: 15%;
+  }
   input[id="cb"] + label {
     font-size: 18px;
     margin-left: 10px;
@@ -156,6 +170,9 @@ const RBtnBox = styled.div`
 const Input = styled.div`
   position: relative;
   display: ${props=>props.dp};
+  span {
+    padding-left: 10px;
+  }
   input {
     width: 300px;
     height: 30px;
@@ -166,6 +183,11 @@ const Input = styled.div`
     padding-left: 10px;
     @media screen and (max-width: 600px) {
       width: 200px;
+    }
+    &.max {
+      text-align: end;
+      padding-left: 0;
+      padding-right: 10px;
     }
   }
   input:hover {
@@ -193,6 +215,7 @@ const Input = styled.div`
     font-weight: bold;
     color: black;
   }
+  
 `
 const Select = styled.select`
   width: 315px;
@@ -230,19 +253,119 @@ const CheckBox = styled.div`
 const CheckInner = styled.div`
   margin-bottom: 10px;
 `
-const Contact = () => {
-  const [x, setX] = useState(0);
-  const form = useRef();
-  const [check, setCheck] = useState(false);
+const SideResultBox = styled.div`
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: fit-content;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  /* border: 1px solid black; */
+  padding-left: 30px;
+`
+const ResultInner = styled.div`
+  width: fit-content;
+  height: fit-content;
+  
+`
+const ResultItem = styled.div`
+  display: ${props=>props.dp};
+  width: 350px;
+  height: fit-content;
+  padding: 15px 0px 15px 0px;
+  margin-bottom: 40px;
+  border: 1.5px solid black;
+  border-radius: 10px;
+  position: relative;
+  font-size: 18px;
+  font-weight: bold;
+  /* background-color: rgb(154,215,86); */
+  .title {
+    font-size: 18px;
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    background-color: #fff;
+    padding: 0px 3px 0px 3px;
+    /* color: rgb(51, 255, 51, 0.7); */
+    /* color: rgb(138, 43, 226, 0.7); */
+  }
+  .cng {
+    position: absolute;
+    top: -13px;
+    right: -14px;
+    font-size: 28px;
+    background-color: #fff;
+    border-radius: 50%;
+    color: rgb(138, 43, 226, 0.7);
 
-  const [company, setCompany] = useState();
-  const [phone, setPhone] = useState();
-  const [category, setCategry] = useState();
-  const [payment, setPayment] = useState([]);
-  const [mMax, setMMax] = useState('');
-  const [url, setURL] = useState();
+    cursor: pointer;
+  }
+`
+
+const PaymentItem = styled.div`
+  width: 30%;
+  height: 40px;
+  margin: 5px 4px 5px 4px;
+  background-color: rgb(138, 43, 226, 0.7);
+  color: #fff;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-flex;
+  justify-content: center;
+  vertical-align: top;
+  align-items: center;
+  display: ${props=>props.dp};
+`
+const FileInput = styled.div`
+
+  input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+  }
+
+  label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 40px;
+    padding-bottom:10px ;
+  }
+
+  p {
+    padding-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+`
+const Contact = () => {
+  const form = useRef();
   const navigate = useNavigate();
 
+  const [x, setX] = useState(0);
+  
+  const [check, setCheck] = useState(false);
+  const [show, setShow] = useState(false);
+
+  const [company, setCompany] = useState(null);
+  const [business, setBusiness] = useState(null);
+  const [phone, setPhone] = useState(null);
+  const [category, setCategry] = useState(null);
+  const [another, setAnother] = useState(null);
+  const [payment, setPayment] = useState([]);
+  const [mMax, setMMax] = useState(null);
+  const [url, setURL] = useState(null);
+  const [fileName] = useState([]);
   const sendEmail = (e) => {
     e.preventDefault();
     emailjs.sendForm('service_13jorms', 'template_ghdzid4', form.current, 'iCX9sUDw24-Idue2Z')
@@ -252,19 +375,25 @@ const Contact = () => {
         console.log(error.text);
       });
   };
-
+  const handleFile = (e) => {
+    fileName.splice(0);
+    var files = document.getElementById('file').files;
+    for(var i = 0; i < files.length; i++){
+      fileName.push(files[i].name);
+    }
+  }
+  const handleBusiness = (e) => {
+    setBusiness(e.target.value);
+  };
   const handleCompany = (e) => {
     setCompany(e.target.value);
   };
-
   const handlePhone = (e) => {
     setPhone(e.target.value);
   };
-
   const handleCategory = (e) => {
     setCategry(e.target.value);
   };
-
   const handlePayment = (e) => {
     if(e.target.checked) {
       payment.push(e.target.value);
@@ -272,22 +401,21 @@ const Contact = () => {
       payment.pop(e.target.value);
     }
   };
-
   const handleMax = (e) => {
     setMMax(e.target.value);
   };
-
   const handleURL = (e) => {
     setURL(e.target.value);
   };
-
+  const handleAnother = (e) => {
+    setAnother(e.target.value);
+  };
   const prev = () => {
     if(x == 0){return null};
     setX(x + 100);
   };
-
   const next = () => {
-    if(x == -400){return null};
+    if(x == -500){return null};
     setX(x - 100);
   };
   
@@ -336,6 +464,10 @@ const Contact = () => {
               <input type="text" onChange={handleCompany} name="company"/>
               <label>회사명</label>
             </Input>
+            <Input className="bn">
+              <input type="text" onChange={handleBusiness} name="business"/>
+              <label>사업자 등록번호</label>
+            </Input>
           </Form>
           
           <Form tx={x}>
@@ -348,34 +480,50 @@ const Contact = () => {
           <Form tx={x}>
             <span className="title">업종을 선택하세요</span>
             <Select onChange={handleCategory}  name="category">
-              <option value="김대중">김대중</option>
-              <option value="노무현">노무현</option>
-              <option value="먼저인">먼저인</option>
+              <option value="null">업종을 선택하세요</option>
+              <option value="의류">의류</option>
+              <option value="식품">식품</option>
+              <option value="제조">제조</option>
+              <option value="전자기기">전자기기</option>
+              <option value="비실물상품">비실물 상품</option>
+              <option value="기타">기타</option>
             </Select>
+            <Input className="another" dp={category == '기타' ? 'block' : 'none'}>
+              <input type="text" onChange={handleAnother} name="another"/>
+              <label>업종을 선택하세요</label>
+            </Input>
           </Form>
 
           <Form tx={x}>
             <span className="cbtitle">결제수단을 선택하세요</span>
             <CheckBox>
               <CheckInner>
-                <input type="checkbox" id="cb" value="PAYCO" onChange={handlePayment} name="payment"/>
+                <input type="checkbox" id="cb" value="수기결제" onChange={handlePayment} onClick={()=>{setShow(!show)}} name="payment"/>
+                <label className="cb" htmlFor="cb">수기결제</label>
+              </CheckInner>
+              <CheckInner>
+                <input type="checkbox" id="cb" value="PAYCO" onChange={handlePayment} onClick={()=>{setShow(!show)}} name="payment"/>
                 <label className="cb" htmlFor="cb">PAYCO</label>
               </CheckInner>
               <CheckInner>
-                <input type="checkbox" id="cb" value="네이버페이" onChange={handlePayment} name="payment"/>
+                <input type="checkbox" id="cb" value="네이버페이" onChange={handlePayment} onClick={()=>{setShow(!show)}} name="payment"/>
                 <label className="cb" htmlFor="cb">네이버페이</label>
               </CheckInner>
               <CheckInner>
-                <input type="checkbox" id="cb" value="카카오페이" onChange={handlePayment} name="payment"/>
+                <input type="checkbox" id="cb" value="카카오페이" onChange={handlePayment} onClick={()=>{setShow(!show)}} name="payment"/>
                 <label className="cb" htmlFor="cb">카카오페이</label>
               </CheckInner>
               <CheckInner>
-                <input type="checkbox" id="cb" value="SMS결제" onChange={handlePayment} name="payment"/>
+                <input type="checkbox" id="cb" value="SMS결제" onChange={handlePayment} onClick={()=>{setShow(!show)}} name="payment"/>
                 <label className="cb" htmlFor="cb">SMS결제</label>
               </CheckInner>
               <CheckInner>
                 <input type="checkbox" id="cb" value="카드결제API" onChange={handlePayment} onClick={()=>{setCheck(!check)}} name="payment"/>
                 <label className="cb" htmlFor="cb">카드결제API</label>
+              </CheckInner>
+              <CheckInner>
+                <input type="checkbox" id="cb" value="잘 모르겠음" onChange={handlePayment} onClick={()=>{setShow(!show)}} name="payment"/>
+                <label className="cb" htmlFor="cb">잘 모르겠음</label>
               </CheckInner>
             </CheckBox>
             <Input className="url" dp={check ? 'block' : 'none'}>
@@ -384,22 +532,103 @@ const Contact = () => {
             </Input>
           </Form>
 
+          <Form tx={x} onMouseOver={()=>{setShow(!show)}} onMouseEnter={()=>{setShow(!show)}}>
+            <span className="filetitle">첨부파일을 선택하세요</span>
+            <FileInput>
+              <label for="file"><MdUploadFile/></label> 
+              <input type="file" id="file" multiple onChange={handleFile}/>
+              {
+                fileName.map((item, i)=>{
+                  return(
+                    <p>{i+1} - {item}</p>
+                  )
+                })
+              }
+            </FileInput>
+          </Form>
+
           <Form tx={x}>
             <Input>
-              <input type="text" onChange={handleMax} name="mmax"/>
+              <input type="text" className="max" onChange={handleMax} name="mmax"/>
               <label>월 한도</label>
+              <span>백만원</span>
             </Input>
           </Form>
+
+          
           
         </FormBox>
 
         
-        <SubmitBtn type="submit" dp={mMax == '' ? 'none' : null} onClick={()=>{
+        <SubmitBtn type="submit" dp={mMax == null ? 'none' : null} onClick={()=>{
           alert("감사합니다. 확인 후 연락드리겠습니다.");
           navigate(-1);
         }}>제출하기</SubmitBtn>
       </ContactBox>  
       </form>
+      <SideResultBox>
+        <ResultInner>
+
+          <ResultItem dp={company == null ? 'none' : 'block'}>
+            <p className="title">회사명</p>
+            <p>{company}</p>
+            <MdChangeCircle className="cng" onClick={()=>{setX(0);}}/>
+          </ResultItem>
+
+          <ResultItem dp={business == null ? 'none' : 'block'}>
+            <p className="title">사업자 등록번호</p>
+            <p>{business}</p>
+            <MdChangeCircle className="cng" onClick={()=>{setX(0);}}/>
+          </ResultItem>
+
+          <ResultItem dp={phone == null ? 'none' : 'block'}> 
+            <p className="title">연락처</p>
+            <p>{phone}</p>
+            <MdChangeCircle className="cng" onClick={()=>{setX(-100);}}/>
+          </ResultItem>
+
+          <ResultItem dp={category == null ? 'none' : 'block'}>
+            <p className="title">업종</p>
+            <p>{category}</p>
+            <MdChangeCircle className="cng" onClick={()=>{setX(-200);}}/>
+          </ResultItem>
+
+          <ResultItem dp={payment.length < 1 ? 'none' : 'block'}>
+            <p className="title">결제수단</p>        
+            {
+              payment.map((item, i)=>{
+                return(
+                  <PaymentItem key={i}>
+                    <span>{item}</span>
+                  </PaymentItem>
+                )
+              })
+            }
+            <MdChangeCircle className="cng" onClick={()=>{setX(-300);}}/>      
+          </ResultItem>
+
+          <ResultItem dp={fileName.length < 1 ? 'none' : 'block'}>
+            <p className="title">첨부파일</p>        
+            {
+              fileName.map((item, i)=>{
+                return(
+                  <PaymentItem key={i}>
+                    <span>{item}</span>
+                  </PaymentItem>
+                )
+              })
+            }
+            <MdChangeCircle className="cng" onClick={()=>{setX(-400);}}/>      
+          </ResultItem>
+          
+          <ResultItem dp={mMax == null ? 'none' : 'block'}>
+            <p className="title">월 한도</p>
+            <p>{mMax}백만원</p>
+            <MdChangeCircle className="cng" onClick={()=>{setX(-500);}}/>
+          </ResultItem>
+            
+        </ResultInner>
+      </SideResultBox>
     </>
   )
 };
