@@ -62,7 +62,7 @@ const Circle = styled.div`
   transition: all 0.5s;
 `
 const FormBox = styled.div`
-  width: 50%;
+  width: 40%;
   height: 50%;
   display: flex;
   align-items: center;
@@ -230,14 +230,16 @@ const Select = styled.select`
 `
 const SubmitBtn = styled.button`
   position: absolute;
-  bottom: 20%;
-
-  width: 120px;
+  left: 147px;
+  bottom: 7%;
+  z-index: 999;
+  width: 110px;
   height: 40px;
 
   cursor: pointer;
 
-  background-color: black;
+  background-color: rgb(138, 43, 226, 0.7);
+  border: none;
   color: white;
   border-radius: 8px;
   font-size: 16px;
@@ -310,7 +312,7 @@ const ResultItem = styled.div`
 const PaymentItem = styled.div`
   width: 30%;
   height: 40px;
-  margin: 5px 4px 5px 4px;
+  margin: 5px 4px 0px 4px;
   background-color: rgb(138, 43, 226, 0.7);
   color: #fff;
   border-radius: 5px;
@@ -480,7 +482,7 @@ const Contact = () => {
           <Form tx={x}>
             <span className="title">업종을 선택하세요</span>
             <Select onChange={handleCategory}  name="category">
-              <option value="null">업종을 선택하세요</option>
+              <option value="">업종을 선택하세요</option>
               <option value="의류">의류</option>
               <option value="식품">식품</option>
               <option value="제조">제조</option>
