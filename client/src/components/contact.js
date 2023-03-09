@@ -423,7 +423,8 @@ const Contact = () => {
   
   return (
     <>
-      <form ref={form} onSubmit={sendEmail}>
+      {/* <form ref={form} onSubmit={sendEmail} method="post"> */}
+      <form>
       <ContactBox>
 
         {/* <StepBox>
@@ -563,8 +564,23 @@ const Contact = () => {
 
         
         <SubmitBtn type="submit" dp={mMax == null ? 'none' : null} onClick={()=>{
-          alert("감사합니다. 확인 후 연락드리겠습니다.");
-          navigate(-1);
+          // alert("감사합니다. 확인 후 연락드리겠습니다.");
+          // navigate(-1);
+          axios.post('http://localhost:8080/upload', {
+            company : company,
+            bn : business,
+            phone : phone,
+            category : category,
+            another : another,
+            payment : payment,
+            url : url,
+            max : mMax
+          }).then((result) => {
+            alert(result.data);
+            // window.location.replace('/admin')
+          }).catch((error) => {
+            alert(error);
+          });
         }}>제출하기</SubmitBtn>
       </ContactBox>  
       </form>
