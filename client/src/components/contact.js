@@ -1,11 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import emailjs from '@emailjs/browser';
-import styled from "styled-components";
+import { useState } from "react";
 
-import { MdArrowBackIos, MdArrowForwardIos, MdCheckCircleOutline, MdCheckCircle, MdChangeCircle, MdOutlineCheckCircle, MdOutlineFileUpload, MdUploadFile } from "react-icons/md"
-import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import axios from "axios";
 
+import { MdArrowBackIos, MdArrowForwardIos, MdChangeCircle, MdUploadFile } from "react-icons/md"
 
 const ContactBox = styled.div`
   width: 100%;
@@ -283,7 +281,6 @@ const ResultItem = styled.div`
   position: relative;
   font-size: 18px;
   font-weight: bold;
-  /* background-color: rgb(154,215,86); */
   .title {
     font-size: 18px;
     position: absolute;
@@ -293,8 +290,6 @@ const ResultItem = styled.div`
     margin-bottom: 10px;
     background-color: #fff;
     padding: 0px 3px 0px 3px;
-    /* color: rgb(51, 255, 51, 0.7); */
-    /* color: rgb(138, 43, 226, 0.7); */
   }
   .cng {
     position: absolute;
@@ -308,7 +303,6 @@ const ResultItem = styled.div`
     cursor: pointer;
   }
 `
-
 const PaymentItem = styled.div`
   width: 30%;
   height: 40px;
@@ -325,7 +319,6 @@ const PaymentItem = styled.div`
   display: ${props=>props.dp};
 `
 const FileInput = styled.div`
-
   input[type="file"] {
     position: absolute;
     width: 0;
@@ -350,9 +343,8 @@ const FileInput = styled.div`
     font-weight: bold;
   }
 `
+
 const Contact = () => {
-  const form = useRef();
-  const navigate = useNavigate();
 
   const [x, setX] = useState(0);
   
@@ -364,26 +356,28 @@ const Contact = () => {
   const [phone, setPhone] = useState(null);
   const [category, setCategry] = useState(null);
   const [another, setAnother] = useState(null);
-  const [payment, setPayment] = useState([]);
+  const [payment] = useState([]);
   const [mMax, setMMax] = useState(null);
   const [url, setURL] = useState(null);
   const [fileName] = useState([]);
-  const sendEmail = (e) => {
-    e.preventDefault();
-    emailjs.sendForm('service_13jorms', 'template_ghdzid4', form.current, 'iCX9sUDw24-Idue2Z')
-      .then((result) => {
-        console.log(result.text);
-      }, (error) => {
-        console.log(error.text);
-      });
-  };
-  const handleFile = (e) => {
+
+  // const form = useRef();
+  // const sendEmail = (e) => {
+  //   emailjs.sendForm('service_13jorms', 'template_ghdzid4', form.current, 'iCX9sUDw24-Idue2Z')
+  //     .then((result) => {
+  //       console.log(result.text);
+  //     }, (error) => {
+  //       console.log(error.text);
+  //     });
+  // };
+
+  const handleFile = () => {
     fileName.splice(0);
     var files = document.getElementById('file').files;
     for(var i = 0; i < files.length; i++){
       fileName.push(files[i].name);
     }
-  }
+  };
   const handleBusiness = (e) => {
     setBusiness(e.target.value);
   };
@@ -413,46 +407,19 @@ const Contact = () => {
     setAnother(e.target.value);
   };
   const prev = () => {
-    if(x == 0){return null};
+    if(x === 0){return null};
     setX(x + 100);
   };
   const next = () => {
-    if(x == -500){return null};
+    if(x === -500){return null};
     setX(x - 100);
   };
   
   return (
     <>
-      {/* <form ref={form} onSubmit={sendEmail} method="post"> */}
-      <form>
+      <form method="POST" action="http://localhost:8080/uploadfile" encType="multipart/form-data" acceptCharset="UTF-8">
       <ContactBox>
 
-        {/* <StepBox>
-          <StepInner>
-            <Circle bg={x == 0 ? '#50BCDF' : '#aaa'} scale={x == 0 ? 1.2 : null}>1</Circle>
-            <StepText fw={x == 0 ? 'bold' : null}>회사명</StepText>
-          </StepInner>
-          <Hr/>
-          <StepInner>
-            <Circle bg={x == -100 ? '#50BCDF' : '#aaa'} scale={x == -100 ? 1.2 : null}>2</Circle>
-            <StepText fw={x == -100 ? 'bold' : null}>연락처</StepText>
-          </StepInner>
-          <Hr/>
-          <StepInner>
-            <Circle bg={x == -200 ? '#50BCDF' : '#aaa'} scale={x == -200 ? 1.2 : null}>3</Circle>
-            <StepText fw={x == -200 ? 'bold' : null}>업종</StepText>
-          </StepInner>
-          <Hr/>
-          <StepInner>
-            <Circle bg={x == -300 ? '#50BCDF' : '#aaa'} scale={x == -300 ? 1.2 : null}>4</Circle>
-            <StepText fw={x == -300 ? 'bold' : null}>결제수단</StepText>
-          </StepInner>
-          <Hr/>
-          <StepInner>
-            <Circle bg={x == -400 ? '#50BCDF' : '#aaa'} scale={x == -400 ? 1.2 : null}>5</Circle>
-            <StepText fw={x == -400 ? 'bold' : null}>월 한도</StepText>
-          </StepInner>  
-        </StepBox> */}
         <FormBox>
 
           <LBtnBox className="lbtn">
@@ -482,7 +449,7 @@ const Contact = () => {
 
           <Form tx={x}>
             <span className="title">업종을 선택하세요</span>
-            <Select onChange={handleCategory}  name="category">
+            <Select onChange={handleCategory} name="category">
               <option value="">업종을 선택하세요</option>
               <option value="의류">의류</option>
               <option value="식품">식품</option>
@@ -491,7 +458,7 @@ const Contact = () => {
               <option value="비실물상품">비실물 상품</option>
               <option value="기타">기타</option>
             </Select>
-            <Input className="another" dp={category == '기타' ? 'block' : 'none'}>
+            <Input className="another" dp={category === '기타' ? 'block' : 'none'}>
               <input type="text" onChange={handleAnother} name="another"/>
               <label>업종을 선택하세요</label>
             </Input>
@@ -539,7 +506,7 @@ const Contact = () => {
             <span className="filetitle">첨부파일을 선택하세요</span>
             <FileInput>
               <label for="file"><MdUploadFile/></label> 
-              <input type="file" id="file" multiple onChange={handleFile}/>
+              <input type="file" name="filename" id="file" acceptCharset="UTF-8" onChange={handleFile} multiple/>
               {
                 fileName.map((item, i)=>{
                   return(
@@ -557,33 +524,30 @@ const Contact = () => {
               <span>백만원</span>
             </Input>
           </Form>
-
-          
-          
+    
         </FormBox>
 
-        
         <SubmitBtn type="submit" dp={mMax == null ? 'none' : null} onClick={()=>{
-          // alert("감사합니다. 확인 후 연락드리겠습니다.");
-          // navigate(-1);
-          axios.post('http://localhost:8080/upload', {
+          axios.post('http://localhost:8080/uploaddata', {
             company : company,
             bn : business,
             phone : phone,
             category : category,
             another : another,
             payment : payment,
+            fileName : fileName,
             url : url,
             max : mMax
           }).then((result) => {
             alert(result.data);
-            // window.location.replace('/admin')
+            window.location.replace('/')
           }).catch((error) => {
             alert(error);
           });
         }}>제출하기</SubmitBtn>
       </ContactBox>  
       </form>
+
       <SideResultBox>
         <ResultInner>
 
@@ -653,38 +617,29 @@ const Contact = () => {
 
 export default Contact;
 
-          // <Container fluid className="gx-0">
-          //   <Form ref={form} onSubmit={sendEmail}>
-          //     <Form.Group>
-          //       <Form.Label style={{ fontWeight: 'bold' }}>Name</Form.Label>
-          //       <Form.Control type="text" placeholder="name" className="mb-3" name="name" onChange={inputName}/>
-
-          //       <Form.Label style={{ fontWeight: 'bold' }}>Email</Form.Label>
-          //       <Form.Control type="email" placeholder="email" className="mb-3" name="email" onChange={inputEmail}/>
-
-          //       <Form.Label style={{ fontWeight: 'bold' }}>Phone</Form.Label>
-          //       <Form.Control type="text" placeholder="phone" className="mb-3" name="phone" onChange={inputPhone}/>
-
-          //       <Form.Label style={{ fontWeight: 'bold' }}>Message</Form.Label>
-          //       <Form.Control as="textarea" rows={5} placeholder="message" className="mb-3" name="message" onChange={inputMessage}/>
-          //     </Form.Group>
-
-          //     <Button type="submit" variant="secondary" id="aboutbutton" onClick={() => {
-          //       axios.post('/mail',{
-          //         data : {
-          //           'name' : name,
-          //           'email' : email,
-          //           'phone' : phone,
-          //           'message' : message
-          //         }
-          //       })
-          //         .then(result => {
-          //           alert(result.data);
-          //           window.location.replace('/about')
-          //         })
-          //         .catch(() => {
-          //           alert('서버 응답 실패');
-          //         })
-          //     }}>Send</Button>
-          //   </Form>
-          // </Container>
+        {/* <StepBox>
+          <StepInner>
+            <Circle bg={x == 0 ? '#50BCDF' : '#aaa'} scale={x == 0 ? 1.2 : null}>1</Circle>
+            <StepText fw={x == 0 ? 'bold' : null}>회사명</StepText>
+          </StepInner>
+          <Hr/>
+          <StepInner>
+            <Circle bg={x == -100 ? '#50BCDF' : '#aaa'} scale={x == -100 ? 1.2 : null}>2</Circle>
+            <StepText fw={x == -100 ? 'bold' : null}>연락처</StepText>
+          </StepInner>
+          <Hr/>
+          <StepInner>
+            <Circle bg={x == -200 ? '#50BCDF' : '#aaa'} scale={x == -200 ? 1.2 : null}>3</Circle>
+            <StepText fw={x == -200 ? 'bold' : null}>업종</StepText>
+          </StepInner>
+          <Hr/>
+          <StepInner>
+            <Circle bg={x == -300 ? '#50BCDF' : '#aaa'} scale={x == -300 ? 1.2 : null}>4</Circle>
+            <StepText fw={x == -300 ? 'bold' : null}>결제수단</StepText>
+          </StepInner>
+          <Hr/>
+          <StepInner>
+            <Circle bg={x == -400 ? '#50BCDF' : '#aaa'} scale={x == -400 ? 1.2 : null}>5</Circle>
+            <StepText fw={x == -400 ? 'bold' : null}>월 한도</StepText>
+          </StepInner>  
+        </StepBox> */}

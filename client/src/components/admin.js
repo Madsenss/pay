@@ -1,9 +1,7 @@
 import styled from "styled-components";
-import { MdOutlineToggleOff, MdOutlineToggleOn, MdAddCircle, MdLocalPhone, MdOutlineFileDownload, MdPrint, MdDeleteForever, MdLogout, MdOutlineCheckCircleOutline, MdHighlightOff, MdCheckCircle, MdClose, MdOutlineCheck, MdMessage  } from "react-icons/md";
+import { MdOutlineToggleOff, MdOutlineToggleOn, MdAddCircle, MdLocalPhone, MdOutlineFileDownload, MdPrint, MdDeleteForever, MdLogout, MdClose, MdOutlineCheck, MdMessage  } from "react-icons/md";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-
 
 const Logout = styled.div`
   width: fit-content;
@@ -19,6 +17,7 @@ const Logout = styled.div`
     opacity: 0.5;
   }
 `
+
 const AdminBox = styled.div`
   padding-top: 50px;
   width: 100%;
@@ -36,6 +35,7 @@ const ContactBox = styled.div`
     width: 90%;
   }
 `
+
 const ContactItem = styled.div`
   background-color: #fff;
 
@@ -56,6 +56,7 @@ const ContactItem = styled.div`
     margin-bottom: 50px;
   }
 `
+
 const ContentBox = styled.div`
   width: 100%;
   height: fit-content;
@@ -78,6 +79,7 @@ const ContentBox = styled.div`
   a {
     text-decoration: none;
     color: green;
+    font-weight: bold;
   }
   .payitem {
     display: inline-block;
@@ -93,6 +95,7 @@ const ContentBox = styled.div`
     border-radius: 5px;
   }
 `
+
 const DialBox = styled.div`
   width: fit-content;
   height: fit-content;
@@ -101,7 +104,7 @@ const DialBox = styled.div`
   align-items: center;
   justify-content: center;
   bottom: 25px;
-  right: 25px;
+  right: 30px;
   
   .z {
     z-index: 998;
@@ -161,75 +164,8 @@ const ToggleBox = styled.div`
     color: rgb(138, 43, 226, 0.7);
   }
 `
-// MdMessage
-const MemoIcon = styled.div`
-  width: fit-content;
-  height: fit-content;
-  position: absolute;
-  bottom:1px;
-  right: 50px;
-  font-size: 30px;
-  position: absolute;
-  cursor: pointer;
-  color: rgb(138, 43, 226, 0.7);
-`
-const MemoBadge = styled.div`
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: red;
-  position: absolute;
-  bottom: 28px;
-  right: -3px;
-  display: ${props=>props.dp};
-`
-const MemoBox = styled.div`
-  visibility: ${props=>props.dp};
-  width: 90%;
-  height: 200px;
-  background-color: #fff;
-  border: 1.5px solid #eee;
-  box-shadow: 2px 2px 7px 0px rgb(0, 0, 0, 0.2);
-  border-radius: 20px;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  z-index: 995;
-  bottom: 30%;
-  right: 5%;
-  .save {
-    font-size: 30px;
-    position: absolute;
-    bottom: 5px;
-    right: 45px;
-    color: rgb(138, 43, 226, 0.7);
-    cursor: pointer;
-  }
-  .close {
-    font-size: 30px;
-    position: absolute;
-    bottom: 5px;
-    right: 10px;
-    color: rgb(138, 43, 226, 0.7);
-    cursor: pointer;
-  }
-  textarea {
-    margin-top: 18px;
-    width: 86%;
-    height: 110px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    resize: none;
-    padding: 10px;
-    border: 1px solid #eee;
-  }
-  textarea:focus {
-    outline: none;
-    border: 1px solid #eee;
-  }
-`
 const DeleteBox = styled.div`
+  z-index: 999;
   display: ${props=>props.dp};
   border: 1px solid black;
   position: absolute;
@@ -270,11 +206,122 @@ const DeleteBox = styled.div`
   }
 
 `
+
+const MemoBadge = styled.div`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: red;
+  position: absolute;
+  bottom: 28px;
+  right: -3px;
+  display: ${props=>props.dp};
+`
+const MemoIcon = styled.div`
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  bottom:1px;
+  right: 55px;
+  font-size: 30px;
+  position: absolute;
+  cursor: pointer;
+  color: rgb(138, 43, 226, 0.7);
+`
+const MemoBox = styled.div`
+  visibility: ${props=>props.dp};
+  width: 90%;
+  height: 200px;
+  background-color: #fff;
+  border: 1.5px solid #eee;
+  box-shadow: 2px 2px 7px 0px rgb(0, 0, 0, 0.2);
+  border-radius: 20px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  z-index: 999;
+  bottom: 30%;
+  right: 5%;
+  .save {
+    font-size: 30px;
+    position: absolute;
+    bottom: 5px;
+    right: 45px;
+    color: rgb(138, 43, 226, 0.7);
+    cursor: pointer;
+  }
+  .close {
+    font-size: 30px;
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    color: rgb(138, 43, 226, 0.7);
+    cursor: pointer;
+  }
+  textarea {
+    margin-top: 18px;
+    width: 86%;
+    height: 110px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    resize: none;
+    padding: 10px;
+    border: 1px solid #eee;
+  }
+  textarea:focus {
+    outline: none;
+    border: 1px solid #eee;
+  }
+`
+const FileBox = styled.div`
+  z-index: 999;
+  display: ${props=>props.dp};
+  border: 1px solid black;
+  position: absolute;
+  top: 40%;
+  right: 5%;
+  width: 90%;
+  min-height: 70px;
+  border-radius: 15px;
+  border: 1.5px solid #eee;
+  box-shadow: 2px 2px 7px 0px rgb(0, 0, 0, 0.2);
+  background-color: #fff;
+  text-align: center;
+  p {
+    font-weight: bold;
+    margin: 10px 0px 10px 0px;
+  }
+  .close {
+    font-size: 30px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: rgb(138, 43, 226, 0.7);
+    cursor: pointer;
+  }
+`
+const FileItem = styled.div`
+  width: 100%;
+  margin-bottom: 15px;
+  a {
+    width: fit-content;
+    height: fit-content;
+    text-decoration: none;
+    background-color: rgb(138, 43, 226, 0.7);
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 4px;
+    border-radius: 6px;
+  }
+`
 const Admin = (props) => {
 
   const [active, setActive] = useState([]);
   const [memo, setMemo] = useState([]);
-  const [showDelete, setshowDelete] = useState([]);
+  const [showDelete, setShowDelete] = useState([]);
+  const [showFile, setShowFile] = useState([]);
   const [memoText, setMemoText] = useState();
   const [password, setPassword] = useState();
   const today = new Date().getTime();
@@ -285,7 +332,6 @@ const Admin = (props) => {
   
   var prtContent;
   var initBody;
-
   function startPrint (id) {
     prtContent = document.getElementById(id);
     window.onbeforeprint = beforePrint;
@@ -299,24 +345,29 @@ const Admin = (props) => {
   function afterPrint(){
     document.body.innerHTML = initBody;
   }
+
   const handleMemo = (e) => {
     setMemoText(e.target.value);
   }
   const handlePassword = (e) => {
     setPassword(e.target.value);
   }
+
   useEffect(()=>{
     const copyActive = [];
     const copyMemo = [];
     const copyDelete = [];
+    const copyFile = [];
     for(let i=0; i<dbdata&&dbdata.length; i++){
       copyActive.push(false);
       copyMemo.push(false);
       copyDelete.push(false);
+      copyFile.push(false);
     };
-    setshowDelete(copyDelete);
+    setShowDelete(copyDelete);
     setActive(copyActive);
     setMemo(copyMemo);
+    setShowFile(copyFile);
   },[])
 
   return (
@@ -353,7 +404,14 @@ const Admin = (props) => {
                 </p>
                 <p><span className="bold">카드결제API URL</span><a href={item.url}>{item.url}</a></p>
                 <p><span className="bold">월 한도</span>{item.max}</p>
-                <p><span className="bold">첨부파일 여부</span>O</p>
+                <p>
+                  <span className="bold">첨부파일</span>
+                  {
+                    item.saveFileName&&item.saveFileName.length > 0
+                    ? <>O</>
+                    : <>X</>
+                  }
+                </p>
                 <p><span className="bold">개인정보 폐기일</span>
                   {
                     'D - ' + Math.floor(((parseInt(item.destructionDate) - today) / 86400000))
@@ -368,7 +426,17 @@ const Admin = (props) => {
                   setActive(copy);
                 }}/>
                 <MdLocalPhone className={'icon zz' + `${active[i] ? ' y4' : ' hide'}`} onClick={()=>{document.location.href=`tel:${item.phone}`;}}/>
-                <MdOutlineFileDownload className={'icon zz' + `${active[i] ? ' y3' : ' hide'}`}/>
+                <MdOutlineFileDownload className={'icon zz' + `${active[i] ? ' y3' : ' hide'}`} onClick={()=>{
+                  
+                  if(item.saveFileName&&item.saveFileName.length > 0) {
+                    var copyShowFile = [...showFile];
+                    copyShowFile[i] = !showFile[i];
+                    setShowFile(copyShowFile);
+                  } else {
+                    alert('첨부파일이 없습니다');
+                  }
+
+                }}/>
                 <MdPrint className={'icon zz' + `${active[i] ? ' y2' : ' hide'}`} onClick={()=>{
                   startPrint(i);
                   window.location.replace('/admin');
@@ -376,13 +444,13 @@ const Admin = (props) => {
                 <MdDeleteForever className={'icon zz' + `${active[i] ? ' y1' : ' hide'}`} onClick={()=>{
                   var copyShowDelete = [...showDelete];
                   copyShowDelete[i] = !showDelete[i];
-                  setshowDelete(copyShowDelete);
+                  setShowDelete(copyShowDelete);
                 }}/>
               </DialBox>
 
               <ToggleBox>
                 {
-                  item.read == 'off'
+                  item.read === 'off'
                   ? <><MdOutlineToggleOff className="icon" onClick={()=>{
                     axios.post('http://localhost:8080/readon', {
                       no : item._id
@@ -438,14 +506,50 @@ const Admin = (props) => {
               <DeleteBox dp={showDelete[i] ? 'block' : 'none'}>
                 <p>비밀번호</p>
                 <input type="password" onChange={handlePassword}/>
-                <button>삭제</button>
+                <button onClick={()=>{
+                  axios.delete('http://localhost:8080/delete', {
+                    data : {
+                      no : item._id,
+                      password : password
+                    }
+                  }).then((result) => {
+                     
+                    if(result.data === '삭제 완료') {
+                      alert(result.data);
+                      window.location.replace('/admin')
+                    } else if( result.data === '비밀번호가 틀렸습니다') {
+                      alert(result.data);
+                    } else {
+                      alert('서버 오류 발생');
+                    }
+                  }).catch((error) => {
+                    alert(error);
+                  });
+                }}>삭제</button>
                 <button onClick={()=>{
                   var copyShowDelete = [...showDelete];
                   copyShowDelete[i] = !showDelete[i];
-                  setshowDelete(copyShowDelete);
+                  setShowDelete(copyShowDelete);
                 }}>취소</button>
               </DeleteBox>
 
+              <FileBox dp={showFile[i] ? 'block' : 'none'}>
+                <p>파일 목록</p>
+                <MdClose className="close" onClick={()=>{
+                  var copyShowFile = [...showFile];
+                  copyShowFile[i] = !showFile[i];
+                  setShowFile(copyShowFile);
+                }}/>
+                {
+                  item.saveFileName&&item.saveFileName.map((item, i)=>{
+                    return (
+                      <FileItem><a href={'http://localhost:8080/download/' + `${item}`} download>{item}</a></FileItem>
+                    )
+                  })
+                }
+                
+                
+              </FileBox>
             </ContactItem>
           )
         })
