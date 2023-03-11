@@ -80,6 +80,7 @@ const ContentBox = styled.div`
     text-decoration: none;
     color: green;
     font-weight: bold;
+    cursor: pointer;
   }
   .payitem {
     display: inline-block;
@@ -324,11 +325,12 @@ const Admin = (props) => {
   const [showFile, setShowFile] = useState([]);
   const [memoText, setMemoText] = useState();
   const [password, setPassword] = useState();
+  const [test, setTest] = useState(2);
   const today = new Date().getTime();
   const dbdata = props.contactData;
-  dbdata && dbdata.sort((a, b)=>{
-    return b._id - a._id;
-  });
+  // dbdata && dbdata.sort((a, b)=>{
+  //   return b._id - a._id;
+  // });
   
   var prtContent;
   var initBody;
@@ -369,7 +371,24 @@ const Admin = (props) => {
     setMemo(copyMemo);
     setShowFile(copyFile);
   },[])
+  const cg1 = () => {
+    dbdata && dbdata.sort((a, b)=>{
+      return a._id - b._id;
+    });
+  }
 
+  const cg2 = () => {
+    dbdata && dbdata.sort((a, b)=>{
+      return b._id - a._id;
+    });
+  }
+ useEffect(()=>{
+  if(test == 1) {
+    cg1()
+  } else if(test == 2) {
+    cg2()
+  }
+ },[test]); 
   return (
 
     <AdminBox>
@@ -402,7 +421,7 @@ const Admin = (props) => {
                     })
                   }
                 </p>
-                <p><span className="bold">카드결제API URL</span><a href={item.url}>{item.url}</a></p>
+                <p><span className="bold">카드결제API URL</span><a onClick={() => { window.open(`${item.url}`); }}>{item.url}</a></p>
                 <p><span className="bold">월 한도</span>{item.max}</p>
                 <p>
                   <span className="bold">첨부파일</span>

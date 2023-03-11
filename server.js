@@ -6,6 +6,14 @@ const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 // const makeSalt = crypto.randomBytes(128).toString('base64');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+
+app.use(session({secret : 'madsens', resave : true, saveUninitialized: false}));
+app.use(passport.initialize());
+app.use(passport.session()); 
+
 require('dotenv').config()
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -51,7 +59,67 @@ MongoClient.connect(process.env.DB_URL, { useUnifiedTopology: true }, (error, cl
 	});
 });
 
+// login 여부 검사
+function Login(req, res, next) {
+  if (req.user) {
+    next()
+  } else {
+    res.send('로그인이 필요한 페이지입니다.')
+  }
+}
 
+// id, pw 검사
+passport.use(new LocalStrategy({
+  usernameField: 'id',
+  passwordField: 'password',
+  session: true,
+  passReqToCallback: false,
+}, function (id, password, done) {
+
+	// password = crypto.createHash(process.env.HASH).update(password + result.salt).digest(process.env.DIGEST);
+	console.log(id);
+	console.log(password);
+
+	db.collection('login').findOne({ adminID : id}, (error, result) => {
+		// if (error) return done(error)
+		
+    if (!result) return done(null, false, { message: '존재하지않는 아이디요' })
+		const loginPassword = crypto.createHash(process.env.HASH).update(password + result.salt).digest(process.env.DIGEST);
+		if(loginPassword == result.password) {
+			return done(null, result)
+		} else {
+			return done(null, false, { message : '비밀번호가 일치하지 않습니다' });
+		}
+	});
+
+}));
+
+
+// session 저장
+passport.serializeUser(function (user, done) {
+  done(null, user.adminID)
+});
+
+passport.deserializeUser(function (id, done) {
+  done(null, {})
+});
+
+
+// Login 요청
+app.post('/login', passport.authenticate('local', { failureRedirect: '/fail' }), function (req, res) {
+  res.send('good');
+});
+
+// app.get('/admin', Login, (req, res) => {
+//   res.sendFile(path.join(__dirname, '/react-project/build/index.html'));
+// })
+
+app.get('/logout', function (req, res, next) {
+  req.logout(function (err) {
+    if (err) { return next(err); }
+    res.send('로그아웃 되었습니다.');
+  });
+});
 
 // DB데이터 송신
 app.get('/contactdata', (req, res) => {
@@ -79,8 +147,8 @@ app.post('/uploaddata', (req, res) => {
 	db.collection('postcounter').findOne({ name: 'total' }, (error, result) => {
 		var totalResult = result.totalPost;
 		db.collection('contact').insertOne({
-			_id: (parseInt(totalResult) + 1), date: nowLocale, company: req.body.company, bn: req.body.bn, phone: req.body.phone, category: req.body.category,
-			another: req.body.another, payment: req.body.payment, url: req.body.url, max: (req.body.max + '백만원'), saveFileName: copy, destructionDate: destructionDate, read: 'off', adminMemo: ''
+			_id: (parseInt(totalResult) + 1), date: nowLocale, company: req.body.company, bn: req.body.bn, phone: req.body.phone, category: req.body.category, another: req.body.another,
+			payment: req.body.payment, url: req.body.url, max: (req.body.max + '백만원'), saveFileName: copy, destructionDate: destructionDate, read: 'off', adminMemo: '', utc : now
 		}, (error, result) => {
 			db.collection('postcounter').updateOne({ name: 'total' }, { $inc: { totalPost: 1 } }, (error, result) => {
 				if (error) { return console.log(error) }
@@ -139,7 +207,6 @@ app.post('/readoff', (req, res) => {
 		res.send('수신 미확인');
 	});
 });
-
 
 
 // 메모 작성
