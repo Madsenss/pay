@@ -412,7 +412,8 @@ const Admin = (props) => {
                     : <>X</>
                   }
                 </p>
-                <p><span className="bold">개인정보 폐기일</span>
+                <p>
+                  <span className="bold">개인정보 폐기일</span>
                   {
                     'D - ' + Math.floor(((parseInt(item.destructionDate) - today) / 86400000))
                   }
