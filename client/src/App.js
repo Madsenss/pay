@@ -5,6 +5,7 @@ import Admin from "./components/admin";
 import Back from "./components/back";
 import Banner from "./components/banner";
 import Contact from "./components/contact";
+import KakaoChat from "./components/kakaochat";
 import Login from "./components/login";
 import Nav from "./components/nav";
 
@@ -21,7 +22,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<><Nav/><Banner/></>}/>
+        <Route path="/" element={<><Nav/><Banner/><KakaoChat/></>}/>
         <Route path="*" element={<>돌아가</>}/>
         <Route path="/contact" element={<><Nav/><Contact/><Back/></>}/>
         <Route path="/login" element={<><Login/></>}/>
