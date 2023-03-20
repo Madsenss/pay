@@ -1,4 +1,11 @@
 import { useEffect } from "react";
+import styled from "styled-components";
+
+const KakaoBox = styled.div`
+  position: fixed;
+  bottom: 45px;
+  right: 30px;
+`
 
 const KakaoChat = () => {
 
@@ -23,11 +30,14 @@ const KakaoChat = () => {
       supportMultipleDensities: true,
     });
     document.body.appendChild(script);
-    document.body.removeChild(script);
+    
+    return () => document.body.removeChild(script);
   } catch (err){}
   }, [])
   return (
-    <div id="kakao-talk-channel-chat-button"></div>
+    <KakaoBox>
+      <div id="kakao-talk-channel-chat-button"/>
+    </KakaoBox> 
   )
 };
 

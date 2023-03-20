@@ -46,7 +46,8 @@ const ContactItem = styled.div`
   height: fit-content;
   border-radius: 20px;
   position: relative;
-  box-shadow: 2px 2px 7px 0px rgb(0, 0, 0, 0.2);
+  border: 2px solid #fff;
+  box-shadow: 2px 2px 6px 1px rgb(0, 0, 0, 0.2);
   @media screen and (max-width: 1500px) {
     width: 46.7%;
   }
@@ -54,6 +55,9 @@ const ContactItem = styled.div`
     width: 100%;
     margin: 0px;
     margin-bottom: 50px;
+  }
+  &:hover {
+    border: 2px solid rgb(138, 43, 226, 0.7);
   }
 `
 
