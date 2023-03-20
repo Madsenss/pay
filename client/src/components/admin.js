@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { MdOutlineToggleOff, MdOutlineToggleOn, MdAddCircle, MdLocalPhone, MdOutlineFileDownload, MdPrint, MdDeleteForever, MdLogout, MdClose, MdOutlineCheck, MdMessage  } from "react-icons/md";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 const Logout = styled.div`
   width: fit-content;
@@ -19,7 +20,7 @@ const Logout = styled.div`
 `
 
 const AdminBox = styled.div`
-  padding-top: 50px;
+  padding-top: 130px;
   width: 100%;
   height: fit-content;
 
@@ -273,6 +274,7 @@ const MemoBox = styled.div`
     resize: none;
     padding: 10px;
     border: 1px solid #eee;
+    /* transform: rotate(0.03deg); */
   }
   textarea:focus {
     outline: none;
@@ -321,7 +323,7 @@ const FileItem = styled.div`
     border-radius: 6px;
   }
 `
-const Admin = (props) => {
+const Admin = () => {
 
   const [active, setActive] = useState([]);
   const [memo, setMemo] = useState([]);
@@ -329,12 +331,16 @@ const Admin = (props) => {
   const [showFile, setShowFile] = useState([]);
   const [memoText, setMemoText] = useState();
   const [password, setPassword] = useState();
-  const [test, setTest] = useState(2);
+  const [dataSort, setDataSort] = useState();
   const today = new Date().getTime();
-  const dbdata = props.contactData;
-  // dbdata && dbdata.sort((a, b)=>{
-  //   return b._id - a._id;
-  // });
+
+  const contactData = useQuery(['test'], () =>
+    axios.get('http://localhost:8080/contactdata').then((result)=>{
+      return result.data.sort((a, b)=>{
+        return b._id - a._id;
+      })
+    })
+  );
   
   var prtContent;
   var initBody;
@@ -364,7 +370,7 @@ const Admin = (props) => {
     const copyMemo = [];
     const copyDelete = [];
     const copyFile = [];
-    for(let i=0; i<dbdata&&dbdata.length; i++){
+    for(let i=0; i<contactData.data&&contactData.data.length; i++){
       copyActive.push(false);
       copyMemo.push(false);
       copyDelete.push(false);
@@ -375,36 +381,22 @@ const Admin = (props) => {
     setMemo(copyMemo);
     setShowFile(copyFile);
   },[])
-  const cg1 = () => {
-    dbdata && dbdata.sort((a, b)=>{
-      return a._id - b._id;
-    });
-  }
 
-  const cg2 = () => {
-    dbdata && dbdata.sort((a, b)=>{
-      return b._id - a._id;
-    });
-  }
- useEffect(()=>{
-  if(test == 1) {
-    cg1()
-  } else if(test == 2) {
-    cg2()
-  }
- },[test]); 
   return (
 
     <AdminBox>
 
       <Logout>
         <MdLogout/>
+        <p>{dataSort}</p>
+        <button onClick={()=>{setDataSort(1);}}>오래된순</button>
+        <button onClick={()=>{setDataSort(2);}}>최신순</button> 
       </Logout>
 
       <ContactBox>
       
       {
-        dbdata&&dbdata.map((item, i)=>{
+        contactData.data&&contactData.data.map((item, i)=>{
           return(
             <ContactItem key={i} id={i}>
 
@@ -420,13 +412,13 @@ const Admin = (props) => {
                   {
                     item.payment.map((item, i)=>{
                       return (
-                        <span className="payitem">{item}</span>
+                        <span key={i} className="payitem">{item}</span>
                       )
                     })
                   }
                 </p>
-                <p><span className="bold">카드결제API URL</span><a onClick={() => { window.open(`${item.url}`); }}>{item.url}</a></p>
-                <p><span className="bold">월 한도</span>{item.max}</p>
+                <p><span className="bold">카드결제API URL</span><a onClick={() => { window.open(`${'http://' + item.url}`); }}>{item.url}</a></p>
+                <p><span className="bold">월 한도</span>{item.max + '백만원'}</p>
                 <p>
                   <span className="bold">첨부파일</span>
                   {
@@ -480,7 +472,6 @@ const Admin = (props) => {
                       no : item._id
                     }).then((result) => { 
                       alert(result.data);
-                      window.location.replace('/admin');
                     }).catch((error) => {
                       alert(error);
                     });
@@ -490,7 +481,6 @@ const Admin = (props) => {
                       no : item._id
                     }).then((result) => {
                       alert(result.data);
-                      window.location.replace('/admin')
                     }).catch((error) => {
                       alert(error);
                     });
@@ -515,7 +505,9 @@ const Admin = (props) => {
                     text : memoText
                   }).then((result) => {
                     alert(result.data);
-                    window.location.replace('/admin')
+                    var copymemo = [...memo];
+                    copymemo[i] = !memo[i];
+                    setMemo(copymemo);
                   }).catch((error) => {
                     alert(error);
                   });

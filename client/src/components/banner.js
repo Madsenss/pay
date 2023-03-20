@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const BannerBox = styled.div`
@@ -37,13 +38,14 @@ const BannerBtn = styled.button`
   cursor: pointer;
 `
 const Banner = () => {
+  const navigate = useNavigate();
   return (
     <>
       <BannerBox>
         <div className="left">결제 방식은 다양한데<br/>쉽고 빠른 서비스가 있을까?<br/>Hip하고 Easy한 PG서비스<br/>NagumPay</div>
         <div className="right">신용카드<br/>SMS결제<br/>네이버페이<br/>카카오페이<br/>PAYCO까지</div>
         <img src="banner2.png"/>
-        <BannerBtn>신청하기</BannerBtn>
+        <BannerBtn onClick={()=>{navigate('/contact')}}>신청하기</BannerBtn>
 
 
       </BannerBox>

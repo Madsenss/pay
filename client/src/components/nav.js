@@ -48,7 +48,7 @@ const Nav = () => {
       <NavBox>
         <NavLogo>
           <img src="ng.png"/>
-          <span>Nagum<span className="point">P</span>ay</span>
+          <span>Uno<span className="point">P</span>ay</span>
         </NavLogo>
         <NavMenu className="right">
           <p>회사 소개</p>

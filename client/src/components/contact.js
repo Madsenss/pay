@@ -360,7 +360,7 @@ const Contact = () => {
   const [mMax, setMMax] = useState(null);
   const [url, setURL] = useState(null);
   const [fileName] = useState([]);
-
+  const formData = new FormData();
   // const form = useRef();
   // const sendEmail = (e) => {
   //   emailjs.sendForm('service_13jorms', 'template_ghdzid4', form.current, 'iCX9sUDw24-Idue2Z')

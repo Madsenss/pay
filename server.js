@@ -148,7 +148,7 @@ app.post('/uploaddata', (req, res) => {
 		var totalResult = result.totalPost;
 		db.collection('contact').insertOne({
 			_id: (parseInt(totalResult) + 1), date: nowLocale, company: req.body.company, bn: req.body.bn, phone: req.body.phone, category: req.body.category, another: req.body.another,
-			payment: req.body.payment, url: req.body.url, max: (req.body.max + '백만원'), saveFileName: copy, destructionDate: destructionDate, read: 'off', adminMemo: '', utc : now
+			payment: req.body.payment, url: req.body.url, max: (req.body.max), saveFileName: copy, destructionDate: destructionDate, read: 'off', adminMemo: '', utc : now
 		}, (error, result) => {
 			db.collection('postcounter').updateOne({ name: 'total' }, { $inc: { totalPost: 1 } }, (error, result) => {
 				if (error) { return console.log(error) }
