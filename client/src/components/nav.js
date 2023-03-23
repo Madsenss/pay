@@ -17,16 +17,10 @@ const NavLogo = styled.div`
   justify-content: center;
   padding-left: 200px;
   img {
-    width: 30px;
-    margin-right: 3px;
+    cursor: pointer;
+    width: 180px;
   }
-  span {
-    font-weight: bold;
-    font-size: 24px;
-    .point {
-      color: #50BCDF;
-    }
-  }
+
 `
 const NavMenu = styled.div`
   width: 80%;
@@ -47,8 +41,7 @@ const Nav = () => {
     <>
       <NavBox>
         <NavLogo>
-          <img src="ng.png"/>
-          <span>Uno<span className="point">P</span>ay</span>
+          <img src="sample2.png" alt="logo" onClick={()=>{(navigate('/'))}}/>
         </NavLogo>
         <NavMenu className="right">
           <p>회사 소개</p>

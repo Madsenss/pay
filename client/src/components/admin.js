@@ -1,17 +1,172 @@
-import styled from "styled-components";
-import { MdOutlineToggleOff, MdOutlineToggleOn, MdAddCircle, MdLocalPhone, MdOutlineFileDownload, MdPrint, MdDeleteForever, MdLogout, MdClose, MdOutlineCheck, MdMessage, MdNorth, MdSouth, MdOutlineGridView, MdOutlineChangeCircle } from "react-icons/md";
-import { MdSearch, MdPowerSettingsNew, MdSort, MdOutlineWatchLater, MdOutlineMonetizationOn, MdOutlineArrowUpward, MdOutlineArrowDownward } from "react-icons/md";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import styled from "styled-components";
+import {
+  MdOutlineToggleOff, MdOutlineToggleOn, MdAddCircle, MdLocalPhone, MdOutlineFileDownload, MdPrint, MdDeleteForever, MdClose, MdOutlineCheck,
+  MdMessage, MdNorth, MdSouth, MdOutlineChangeCircle, MdSearch, MdOutlineWatchLater, MdOutlineMonetizationOn, MdPowerSettingsNew, MdMenu
+} from "react-icons/md";
 
+// NAV
+const NavBox = styled.div`
+  z-index: 999;
+  width: 100%;
+  height: 60px;
+  position: fixed;
+  border-bottom: 4px solid rgb(0, 0, 0, 0.1);
+  .icon {
+    font-size: 28px;
+    cursor: pointer;
+    color: rgb(138, 43, 226, 0.7);
+    margin-right: 10px;
+    transition: all 0.3s;
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+  @media screen and (max-width: 800px) {
+    height: fit-content;
+    border: none;
+  }
+`
+const NavLogo = styled.div`
+  position: relative;
+  z-index: 998;
+  width: 60%;
+  height: 100%;
+  background-color: #fff;
+  vertical-align: top;
+  display: inline-flex;
+  align-items: center;
+  font-weight: bold;
+  .menu {
+    position: absolute;
+    right: 30px;
+    display: none;
+    @media screen and (max-width: 800px) {
+      display: block;
+    }
+    @media screen and (max-width: 500px) {
+      right: 20px;
+    }
+    &.active {
+      transform: rotate(-90deg);
+      opacity: 0.6;
+    }
+  }
+  img {
+    width: 180px;
+    margin-left: 180px;
+    @media screen and (max-width: 1500px) {
+      margin-left: 70px;
+    }
+    @media screen and (max-width: 800px) {
+      margin-left: 0px;
+    }
+  }
+  p {
+    color: rgb(138, 43, 226, 0.7);
+    margin-left: 20px;
+  }
+  span {
+    color: lightseagreen;
+  }
+  @media screen and (max-width: 800px) {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 0px 10px 0px;
+    border-bottom: 4px solid rgb(0, 0, 0, 0.1);
+  }
+  @media screen and (max-width: 500px) {
+    p {
+      font-size: 14px;
+      position: absolute;
+      &.visitor {
+        top: 10px;
+        left: 10px;
+      }
+      &.readoff {
+        bottom: 10px;
+        left: 10px;
+      }
+    }
+  }
+`
+const NavMenu = styled.div`
+  z-index: 997;
+  position: relative;
+  background-color: #fff;
+  overflow: hidden;
+  width: 40%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: end;
+  .mr {
+    margin-right: 180px;
+    @media screen and (max-width: 1500px) {
+      margin-right: 70px;
+    }
+    @media screen and (max-width: 800px) {
+      margin-right: 15px;
+    }
+  }
+  @media screen and (max-width: 800px) {
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 15px;
+    box-shadow: 2px 2px 6px 1px rgb(0, 0, 0, 0.2);
+    background-color: #fff;
+    border: 2px solid rgb(138, 43, 226, 0.7);
+    border-radius: 15px;
+    padding: 10px 0px 10px 0px;
+    transform: translateY(${props => props.x});
+    transition: 0.6s;
+  }
+`
+const SearchBox = styled.div`
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  input {
+    width: 0px;
+    opacity: 0;
+    height: 20px;
+    font-size: 14px;
+    padding-left: 10px;
+    margin-right: 10px;
+    border: 1.5px solid #aaa;
+    border-radius: 12px;
+    visibility: visible;
+    transition: all 0.8s;
+    &.active {
+      width: 150px;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  input:focus {
+    outline: none;
+    border: 1.5px solid rgb(138, 43, 226, 0.7);
+  }
+  input:focus::placeholder {
+    color: transparent;
+  }
+  input::placeholder {
+    transition: all 0.4s;
+    padding-left: 7px;
+  }
+`
 
-
+// ADMIN CONTENT
 const AdminBox = styled.div`
-  padding-top: 130px;
+  padding-top: 150px;
   width: 100%;
   height: fit-content;
-
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,7 +181,6 @@ const ContactBox = styled.div`
     width: 90%;
   }
 `
-
 const ContactItem = styled.div`
   background-color: #fff;
   display: inline-block;
@@ -50,7 +204,6 @@ const ContactItem = styled.div`
     border: 2px solid rgb(138, 43, 226, 0.7);
   }
 `
-
 const ContentBox = styled.div`
   width: 100%;
   height: fit-content;
@@ -91,6 +244,7 @@ const ContentBox = styled.div`
   }
 `
 
+// SUB BUTTON
 const DialBox = styled.div`
   width: fit-content;
   height: fit-content;
@@ -159,6 +313,8 @@ const ToggleBox = styled.div`
     color: rgb(138, 43, 226, 0.7);
   }
 `
+
+// MODAL
 const DeleteBox = styled.div`
   z-index: 999;
   display: ${props => props.dp};
@@ -202,27 +358,6 @@ const DeleteBox = styled.div`
 
 `
 
-const MemoBadge = styled.div`
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: red;
-  position: absolute;
-  bottom: 28px;
-  right: -3px;
-  display: ${props => props.dp};
-`
-const MemoIcon = styled.div`
-  width: fit-content;
-  height: fit-content;
-  position: absolute;
-  bottom:1px;
-  right: 55px;
-  font-size: 30px;
-  position: absolute;
-  cursor: pointer;
-  color: rgb(138, 43, 226, 0.7);
-`
 const MemoBox = styled.div`
   visibility: ${props => props.dp};
   width: 90%;
@@ -270,6 +405,28 @@ const MemoBox = styled.div`
     border: 1px solid #eee;
   }
 `
+const MemoBadge = styled.div`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: red;
+  position: absolute;
+  bottom: 28px;
+  right: -3px;
+  display: ${props => props.dp};
+`
+const MemoIcon = styled.div`
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  bottom:1px;
+  right: 55px;
+  font-size: 30px;
+  position: absolute;
+  cursor: pointer;
+  color: rgb(138, 43, 226, 0.7);
+`
+
 const FileBox = styled.div`
   z-index: 999;
   display: ${props => props.dp};
@@ -312,11 +469,13 @@ const FileItem = styled.div`
     border-radius: 6px;
   }
 `
+
+// SORT BUTTON
 const SortBox = styled.div`
   z-index: 999;
   position: fixed;
-  bottom: 100px;
-  right: 60px;
+  top: 103px;
+  left: 55px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -324,6 +483,9 @@ const SortBox = styled.div`
     font-size: 35px;
     cursor: pointer;
     color: rgb(138, 43, 226, 0.7);
+    @media screen and (max-width: 800px) {
+      font-size: 30px;
+    }
   }
   .z {
     z-index: 999;
@@ -341,24 +503,24 @@ const SortItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.5s;
+  transition: all 1s;
   &.x1 {
-    transform: translate(-10px, -70px);
+    transform: translate(150%, 0px);
     opacity: 1;
     transition: all 0.4s;
   }
   &.x2 {
-    transform: translate(-60px, -30px);
+    transform: translate(300%, 0px);
     opacity: 1;
     transition: all 0.8s;
   }
   &.x3 {
-    transform: translate(-60px, 30px);
+    transform: translate(450%, 0px);
     opacity: 1;
     transition: all 1.2s;
   }
   &.x4 {
-    transform: translate(-10px, 70px);
+    transform: translate(600%, 0px);
     opacity: 1;
     transition: all 1.3s;
   }
@@ -367,7 +529,7 @@ const SortItem = styled.div`
     opacity: 0;
   }
   .active {
-    transition: all 1s;
+    transition: all 1.3s;
     transform: rotate(-180deg);
     opacity: 0.5;
   }
@@ -376,6 +538,9 @@ const SortItem = styled.div`
     transition: all 1s;
     transform: rotate(180deg);
   }
+  @media screen and (max-width: 800px) {
+    
+  }
 `
 const ItemBadge = styled.span`
 
@@ -383,8 +548,8 @@ const ItemBadge = styled.span`
   position: absolute;
   font-size: 20px;
   top: -15px;
-  right: -10px;
-  color: lightcoral;
+  right: -13px;
+  color: lightseagreen;
 
   display: flex;
   align-items: center;
@@ -392,26 +557,68 @@ const ItemBadge = styled.span`
 
 `
 
+// SEARCH NULL
+const NullCompany = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: fixed;
+  bottom: 50vh;
+
+  width: 40%;
+  height: 50px;
+  margin-left: 30%;
+
+  box-shadow: 2px 2px 6px 1px rgb(0, 0, 0, 0.2);
+  background-color: #fff;
+  border: 2px solid rgb(138, 43, 226, 0.7);
+  border-radius: 15px;
+
+  font-weight: bold;
+  font-size: 18px;
+  @media screen and (max-width: 800px) {
+    width: 90%;
+    margin-left: 5%;
+  }
+`
+
+
 const Admin = () => {
 
+  // NAV
+  const [showInput, setShowInput] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [search, setSearch] = useState('');
+
+  // ADMIN
   const [active, setActive] = useState([]);
   const [memo, setMemo] = useState([]);
   const [showDelete, setShowDelete] = useState([]);
   const [showFile, setShowFile] = useState([]);
+
   const [memoText, setMemoText] = useState();
   const [password, setPassword] = useState();
-  const [dataSort, setDataSort] = useState(1);
-  const [sortActive, setSortActive] = useState(false);
-  const [test, setTest] = useState();
-  const today = new Date().getTime();
 
-  const contactData = useQuery(['test'], () =>
+  const [dataSort, setDataSort] = useState();
+  const [sortActive, setSortActive] = useState(false);
+
+  const today = new Date().getTime();
+  const navigate = useNavigate();
+
+  // QUERY
+  const contactData = useQuery(['dbdata'], () =>
     axios.get('http://localhost:8080/contactdata').then((result) => {
       return result.data.sort((a, b) => {
         return b._id - a._id;
       })
     })
   );
+  const findRead = contactData.data && contactData.data.filter(v => v.read === 'off');
+  const searchFilter = contactData.data && contactData.data.filter((item) => {
+    return item.company.toUpperCase().includes(search.toUpperCase());
+  });
+  // PRINT
   var prtContent;
   var initBody;
   function startPrint(id) {
@@ -428,19 +635,57 @@ const Admin = () => {
     document.body.innerHTML = initBody;
   }
 
+  // HANDLE
   const handleMemo = (e) => {
     setMemoText(e.target.value);
   }
   const handlePassword = (e) => {
     setPassword(e.target.value);
   }
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+  }
 
+  // SORT
+  const newOrder = () => {
+    searchFilter && searchFilter.sort((a, b) => {
+      return b._id - a._id;
+    });
+  }
+  const oldOrder = () => {
+    searchFilter && searchFilter.sort((a, b) => {
+      return a._id - b._id;
+    });
+  }
+  const highMax = () => {
+    searchFilter && searchFilter.sort((a, b) => {
+      return b.max - a.max;
+    });
+  }
+  const lowMax = () => {
+    searchFilter && searchFilter.sort((a, b) => {
+      return a.max - b.max;
+    });
+  }
+  if (dataSort === 'new') {
+    newOrder();
+  } else if (dataSort === 'old') {
+    oldOrder();
+  } else if (dataSort === 'high') {
+    highMax()
+  } else if (dataSort === 'low') {
+    lowMax()
+  } else {
+    newOrder();
+  }
+
+  // INITIALIZE
   useEffect(() => {
     const copyActive = [];
     const copyMemo = [];
     const copyDelete = [];
     const copyFile = [];
-    for (let i = 0; i < contactData.data && contactData.data.length; i++) {
+    for (let i = 0; i < contactData && contactData.length; i++) {
       copyActive.push(false);
       copyMemo.push(false);
       copyDelete.push(false);
@@ -452,255 +697,250 @@ const Admin = () => {
     setShowFile(copyFile);
   }, [])
 
-  const newOrder = () => {
-    contactData.data&&contactData.data.sort((a,b)=>{
-      return b._id - a._id;
-    });
-  }
-  const oldOrder = () => {
-    contactData.data&&contactData.data.sort((a,b)=>{
-      return a._id - b._id;
-    });
-  }
-  const highMax = () => {
-    contactData.data&&contactData.data.sort((a,b)=>{
-      return b.max - a.max;
-    });
-  }
-  const lowMax = () => {
-    contactData.data&&contactData.data.sort((a,b)=>{
-      return a.max - b.max;
-    });
-  }
-  if (dataSort == 'new') {  
-    newOrder();
-  } else if(dataSort == 'old') {
-    oldOrder();
-  } else if(dataSort == 'high') {
-    highMax()
-  } else if(dataSort == 'low') {
-    lowMax()
-  } else {
-    newOrder();
-  }
   return (
+    <>
+      <NavBox>
+        <NavLogo>
+          <img src="sample2.png" alt="logo" />
+          <p className="visitor">방문자<span>&nbsp;1명</span></p>
+          <p className="readoff">미확인<span>&nbsp;{findRead && findRead.length}건</span></p>
+          <MdMenu className={'icon menu ' + `${showSearch ? 'active' : null}`} onClick={() => { setShowSearch(!showSearch) }}>TEST`</MdMenu>
+        </NavLogo>
+        <NavMenu x={showSearch ? '0%' : '-150%'}>
+          <SearchBox>
+            <input type="text" className={showInput ? 'active' : null} onChange={handleSearch} placeholder="업체명을 입력하세요"/>
+            <MdSearch className="icon" onClick={() => { setShowInput(!showInput) }} />
+          </SearchBox>
+          <MdPowerSettingsNew className="icon mr" onClick={() => {
+            navigate('/login')
+          }} />
+        </NavMenu>
+      </NavBox>
 
-    <AdminBox>
-      <SortBox>
-        <SortItem className="z">
-          <MdOutlineChangeCircle  className={'icon ' + `${ sortActive ? 'active' : 'noneactive'}`} onClick={() => { setSortActive(!sortActive) }} />
-        </SortItem>
+      <AdminBox>
 
-        <SortItem className={sortActive ? 'x1' : 'hide'}>
-          <MdOutlineWatchLater className="icon" onClick={()=>{setDataSort('new'); setSortActive(!sortActive);}}/>
-          <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
-            <MdNorth/>
-          </ItemBadge>
-        </SortItem>
+        <SortBox>
+          <SortItem className="z">
+            <MdOutlineChangeCircle className={'icon ' + `${sortActive ? 'active' : 'noneactive'}`} onClick={() => { setSortActive(!sortActive) }} />
+          </SortItem>
 
-        <SortItem className={sortActive ? 'x2' : 'hide'}>
-          <MdOutlineWatchLater className="icon" onClick={()=>{setDataSort('old'); setSortActive(!sortActive);}}/>
-          <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
-            <MdSouth/>
-          </ItemBadge>
-        </SortItem>
+          <SortItem className={sortActive ? 'x1' : 'hide'}>
+            <MdOutlineWatchLater className="icon" onClick={() => { setDataSort('new'); setSortActive(!sortActive); }} />
+            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
+              <MdNorth />
+            </ItemBadge>
+          </SortItem>
 
-        <SortItem className={sortActive ? 'x3' : 'hide'}>
-          <MdOutlineMonetizationOn className="icon" onClick={()=>{setDataSort('high'); setSortActive(!sortActive);}}/>
-          <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
-            <MdNorth/>
-          </ItemBadge>
-        </SortItem>
+          <SortItem className={sortActive ? 'x2' : 'hide'}>
+            <MdOutlineWatchLater className="icon" onClick={() => { setDataSort('old'); setSortActive(!sortActive); }} />
+            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
+              <MdSouth />
+            </ItemBadge>
+          </SortItem>
 
-        <SortItem className={sortActive ? 'x4' : 'hide'}>
-          <MdOutlineMonetizationOn className="icon" onClick={()=>{setDataSort('low'); setSortActive(!sortActive);}}/>
-          <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
-            <MdSouth/>
-          </ItemBadge>
-        </SortItem>
-      </SortBox>
+          <SortItem className={sortActive ? 'x3' : 'hide'}>
+            <MdOutlineMonetizationOn className="icon" onClick={() => { setDataSort('high'); setSortActive(!sortActive); }} />
+            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
+              <MdNorth />
+            </ItemBadge>
+          </SortItem>
 
-      <ContactBox>
+          <SortItem className={sortActive ? 'x4' : 'hide'}>
+            <MdOutlineMonetizationOn className="icon" onClick={() => { setDataSort('low'); setSortActive(!sortActive); }} />
+            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
+              <MdSouth />
+            </ItemBadge>
+          </SortItem>
+        </SortBox>
 
-        {
-          contactData.data && contactData.data.map((item, i) => {
-            return (
-              <ContactItem key={i} id={i}>
+        <ContactBox>
+          {
+            searchFilter && searchFilter.map((item, i) => {
+              return (
+                <ContactItem key={i} id={i}>
 
-                <ContentBox>
-                  <p><span className="bold">발신일</span>{item.date}</p>
-                  <p><span className="bold">업체명</span>{item.company}</p>
-                  <p><span className="bold">사업자 등록번호</span>{item.bn}</p>
-                  <p><span className="bold">연락처</span>{item.phone}</p>
-                  <p><span className="bold">업종</span>{item.category}</p>
-                  <p><span className="bold">업종 기타내용</span>{item.another}</p>
-                  <p className="pay">
-                    <span className="bold">결제수단</span>
+                  <ContentBox>
+                    <p><span className="bold">발신일</span>{item.date}</p>
+                    <p><span className="bold">업체명</span>{item.company}</p>
+                    <p><span className="bold">사업자 등록번호</span>{item.bn}</p>
+                    <p><span className="bold">연락처</span>{item.phone}</p>
+                    <p><span className="bold">업종</span>{item.category}</p>
+                    <p><span className="bold">업종 기타내용</span>{item.another}</p>
+                    <p className="pay">
+                      <span className="bold">결제수단</span>
+                      {
+                        item.payment.map((item, i) => {
+                          return (
+                            <span key={i} className="payitem">{item}</span>
+                          )
+                        })
+                      }
+                    </p>
+                    <p><span className="bold">카드결제API URL</span><a onClick={() => { window.open(`${'http://' + item.url}`); }}>{item.url}</a></p>
+                    <p><span className="bold">월 한도</span>{item.max + '백만원'}</p>
+                    <p>
+                      <span className="bold">첨부파일</span>
+                      {
+                        item.saveFileName && item.saveFileName.length > 0
+                          ? <>O</>
+                          : <>X</>
+                      }
+                    </p>
+                    <p>
+                      <span className="bold">개인정보 폐기일</span>
+                      {
+                        'D - ' + Math.floor(((parseInt(item.destructionDate) - today) / 86400000))
+                      }
+                    </p>
+                  </ContentBox>
+
+                  <DialBox>
+                    <MdAddCircle className={'icon z' + `${active[i] ? ' active' : ''}`} onClick={() => {
+                      var copy = [...active];
+                      copy[i] = !active[i];
+                      setActive(copy);
+                    }} />
+                    <MdLocalPhone className={'icon zz' + `${active[i] ? ' y4' : ' hide'}`} onClick={() => { document.location.href = `tel:${item.phone}`; }} />
+                    <MdOutlineFileDownload className={'icon zz' + `${active[i] ? ' y3' : ' hide'}`} onClick={() => {
+
+                      if (item.saveFileName && item.saveFileName.length > 0) {
+                        var copyShowFile = [...showFile];
+                        copyShowFile[i] = !showFile[i];
+                        setShowFile(copyShowFile);
+                      } else {
+                        alert('첨부파일이 없습니다');
+                      }
+
+                    }} />
+                    <MdPrint className={'icon zz' + `${active[i] ? ' y2' : ' hide'}`} onClick={() => {
+                      startPrint(i);
+                      window.location.replace('/admin');
+                    }} />
+                    <MdDeleteForever className={'icon zz' + `${active[i] ? ' y1' : ' hide'}`} onClick={() => {
+                      var copyShowDelete = [...showDelete];
+                      copyShowDelete[i] = !showDelete[i];
+                      setShowDelete(copyShowDelete);
+                    }} />
+                  </DialBox>
+
+                  <ToggleBox>
                     {
-                      item.payment.map((item, i) => {
-                        return (
-                          <span key={i} className="payitem">{item}</span>
-                        )
-                      })
+                      item.read === 'off'
+                        ? <><MdOutlineToggleOff className="icon" onClick={() => {
+                          axios.post('http://localhost:8080/readon', {
+                            no: item._id
+                          }).then((result) => {
+                            alert(result.data);
+                          }).catch((error) => {
+                            alert(error);
+                          });
+                        }} /><span>미확인</span></>
+                        : <><MdOutlineToggleOn className="icon on" onClick={() => {
+                          axios.post('http://localhost:8080/readoff', {
+                            no: item._id
+                          }).then((result) => {
+                            alert(result.data);
+                          }).catch((error) => {
+                            alert(error);
+                          });
+                        }} /><span className="on">확인</span></>
                     }
-                  </p>
-                  <p><span className="bold">카드결제API URL</span><a onClick={() => { window.open(`${'http://' + item.url}`); }}>{item.url}</a></p>
-                  <p><span className="bold">월 한도</span>{item.max + '백만원'}</p>
-                  <p>
-                    <span className="bold">첨부파일</span>
-                    {
-                      item.saveFileName && item.saveFileName.length > 0
-                        ? <>O</>
-                        : <>X</>
-                    }
-                  </p>
-                  <p>
-                    <span className="bold">개인정보 폐기일</span>
-                    {
-                      'D - ' + Math.floor(((parseInt(item.destructionDate) - today) / 86400000))
-                    }
-                  </p>
-                </ContentBox>
+                  </ToggleBox>
 
-                <DialBox>
-                  <MdAddCircle className={'icon z' + `${active[i] ? ' active' : ''}`} onClick={() => {
-                    var copy = [...active];
-                    copy[i] = !active[i];
-                    setActive(copy);
-                  }} />
-                  <MdLocalPhone className={'icon zz' + `${active[i] ? ' y4' : ' hide'}`} onClick={() => { document.location.href = `tel:${item.phone}`; }} />
-                  <MdOutlineFileDownload className={'icon zz' + `${active[i] ? ' y3' : ' hide'}`} onClick={() => {
-
-                    if (item.saveFileName && item.saveFileName.length > 0) {
-                      var copyShowFile = [...showFile];
-                      copyShowFile[i] = !showFile[i];
-                      setShowFile(copyShowFile);
-                    } else {
-                      alert('첨부파일이 없습니다');
-                    }
-
-                  }} />
-                  <MdPrint className={'icon zz' + `${active[i] ? ' y2' : ' hide'}`} onClick={() => {
-                    startPrint(i);
-                    window.location.replace('/admin');
-                  }} />
-                  <MdDeleteForever className={'icon zz' + `${active[i] ? ' y1' : ' hide'}`} onClick={() => {
-                    var copyShowDelete = [...showDelete];
-                    copyShowDelete[i] = !showDelete[i];
-                    setShowDelete(copyShowDelete);
-                  }} />
-                </DialBox>
-
-                <ToggleBox>
-                  {
-                    item.read === 'off'
-                      ? <><MdOutlineToggleOff className="icon" onClick={() => {
-                        axios.post('http://localhost:8080/readon', {
-                          no: item._id
-                        }).then((result) => {
-                          alert(result.data);
-                        }).catch((error) => {
-                          alert(error);
-                        });
-                      }} /><span>미확인</span></>
-                      : <><MdOutlineToggleOn className="icon on" onClick={() => {
-                        axios.post('http://localhost:8080/readoff', {
-                          no: item._id
-                        }).then((result) => {
-                          alert(result.data);
-                        }).catch((error) => {
-                          alert(error);
-                        });
-                      }} /><span className="on">확인</span></>
-                  }
-                </ToggleBox>
-
-                <MemoIcon>
-                  <MdMessage onClick={() => {
-                    var copymemo = [...memo];
-                    copymemo[i] = !memo[i];
-                    setMemo(copymemo);
-                  }} />
-                  <MemoBadge dp={item.memo && item.memo.length > 0 ? 'block' : 'none'} />
-                </MemoIcon>
-
-                <MemoBox dp={memo[i] ? 'visible' : 'hidden'}>
-                  <textarea onChange={handleMemo} defaultValue={item.memo} />
-                  <MdOutlineCheck className="save" onClick={() => {
-                    axios.post('http://localhost:8080/writememo', {
-                      no: item._id,
-                      text: memoText
-                    }).then((result) => {
-                      alert(result.data);
+                  <MemoIcon>
+                    <MdMessage onClick={() => {
                       var copymemo = [...memo];
                       copymemo[i] = !memo[i];
                       setMemo(copymemo);
-                    }).catch((error) => {
-                      alert(error);
-                    });
-                  }} />
-                  <MdClose className="close" onClick={() => {
-                    var copymemo = [...memo];
-                    copymemo[i] = !memo[i];
-                    setMemo(copymemo);
-                  }} />
-                </MemoBox>
+                    }} />
+                    <MemoBadge dp={item.memo && item.memo.length > 0 ? 'block' : 'none'} />
+                  </MemoIcon>
 
-                <DeleteBox dp={showDelete[i] ? 'block' : 'none'}>
-                  <p>비밀번호</p>
-                  <input type="password" onChange={handlePassword} />
-                  <button onClick={() => {
-                    axios.delete('http://localhost:8080/delete', {
-                      data: {
+                  <MemoBox dp={memo[i] ? 'visible' : 'hidden'}>
+                    <textarea onChange={handleMemo} defaultValue={item.memo} />
+                    <MdOutlineCheck className="save" onClick={() => {
+                      axios.post('http://localhost:8080/writememo', {
                         no: item._id,
-                        password: password
-                      }
-                    }).then((result) => {
-
-                      if (result.data === '삭제 완료') {
+                        text: memoText
+                      }).then((result) => {
                         alert(result.data);
-                        window.location.replace('/admin')
-                      } else if (result.data === '비밀번호가 틀렸습니다') {
-                        alert(result.data);
-                      } else {
-                        alert('서버 오류 발생');
-                      }
-                    }).catch((error) => {
-                      alert(error);
-                    });
-                  }}>삭제</button>
-                  <button onClick={() => {
-                    var copyShowDelete = [...showDelete];
-                    copyShowDelete[i] = !showDelete[i];
-                    setShowDelete(copyShowDelete);
-                  }}>취소</button>
-                </DeleteBox>
+                        var copymemo = [...memo];
+                        copymemo[i] = !memo[i];
+                        setMemo(copymemo);
+                      }).catch((error) => {
+                        alert(error);
+                      });
+                    }} />
+                    <MdClose className="close" onClick={() => {
+                      var copymemo = [...memo];
+                      copymemo[i] = !memo[i];
+                      setMemo(copymemo);
+                    }} />
+                  </MemoBox>
 
-                <FileBox dp={showFile[i] ? 'block' : 'none'}>
-                  <p>파일 목록</p>
-                  <MdClose className="close" onClick={() => {
-                    var copyShowFile = [...showFile];
-                    copyShowFile[i] = !showFile[i];
-                    setShowFile(copyShowFile);
-                  }} />
-                  {
-                    item.saveFileName && item.saveFileName.map((item, i) => {
-                      return (
-                        <FileItem><a href={'http://localhost:8080/download/' + `${item}`} download>{item}</a></FileItem>
-                      )
-                    })
-                  }
+                  <DeleteBox dp={showDelete[i] ? 'block' : 'none'}>
+                    <p>비밀번호</p>
+                    <input type="password" onChange={handlePassword} />
+                    <button onClick={() => {
+                      axios.delete('http://localhost:8080/delete', {
+                        data: {
+                          no: item._id,
+                          password: password
+                        }
+                      }).then((result) => {
+
+                        if (result.data === '삭제 완료') {
+                          alert(result.data);
+                          var copyShowDelete = [...showDelete];
+                          copyShowDelete[i] = !showDelete[i];
+                          setShowDelete(copyShowDelete);
+                        } else if (result.data === '비밀번호가 틀렸습니다') {
+                          alert(result.data);
+                        } else {
+                          alert('서버 오류 발생');
+                        }
+                      }).catch((error) => {
+                        alert(error);
+                      });
+                    }}>삭제</button>
+                    <button onClick={() => {
+                      var copyShowDelete = [...showDelete];
+                      copyShowDelete[i] = !showDelete[i];
+                      setShowDelete(copyShowDelete);
+                    }}>취소</button>
+                  </DeleteBox>
+
+                  <FileBox dp={showFile[i] ? 'block' : 'none'}>
+                    <p>파일 목록</p>
+                    <MdClose className="close" onClick={() => {
+                      var copyShowFile = [...showFile];
+                      copyShowFile[i] = !showFile[i];
+                      setShowFile(copyShowFile);
+                    }} />
+                    {
+                      item.saveFileName && item.saveFileName.map((item, i) => {
+                        return (
+                          <FileItem key={i}><a href={'http://localhost:8080/download/' + `${item}`} download>{item}</a></FileItem>
+                        )
+                      })
+                    }
 
 
-                </FileBox>
-              </ContactItem>
-            )
-          })
-        }
+                  </FileBox>
+                </ContactItem>
+              )
+            })
+          }
 
-      </ContactBox>
+        </ContactBox>
 
-    </AdminBox>
+      </AdminBox>
+      {
+        searchFilter && searchFilter.length == 0
+        ? <NullCompany>일치하는 업체명이 존재하지 않습니다</NullCompany>
+        : null
+      }
+    </>
   )
 };
 
