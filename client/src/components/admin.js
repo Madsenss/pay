@@ -317,7 +317,6 @@ const SortBox = styled.div`
   position: fixed;
   bottom: 100px;
   right: 60px;
-  background-color: red;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -331,10 +330,11 @@ const SortBox = styled.div`
   }
 `
 const SortItem = styled.div`
+  z-index: 999;
   position: absolute;
   /* position: relative; */
   border-radius: 50%;
-  background-color: transparent;
+  background-color: #fff;
   box-shadow: 0.5px 0.5px 5px 1px rgb(0, 0, 0, 0.5);
   width: fit-content;
   height: fit-content;
@@ -368,13 +368,13 @@ const SortItem = styled.div`
   }
   .active {
     transition: all 1s;
-    transform: rotate(180deg);
+    transform: rotate(-180deg);
     opacity: 0.5;
   }
   .noneactive {
     opacity: 1;
     transition: all 1s;
-    transform: rotate(-180deg);
+    transform: rotate(180deg);
   }
 `
 const ItemBadge = styled.span`
@@ -384,7 +384,7 @@ const ItemBadge = styled.span`
   font-size: 20px;
   top: -15px;
   right: -10px;
-  color: #aaa;
+  color: lightcoral;
 
   display: flex;
   align-items: center;
@@ -400,8 +400,9 @@ const Admin = () => {
   const [showFile, setShowFile] = useState([]);
   const [memoText, setMemoText] = useState();
   const [password, setPassword] = useState();
-  const [dataSort, setDataSort] = useState();
-  const [sortActive, setSortActive] = useState(true);
+  const [dataSort, setDataSort] = useState(1);
+  const [sortActive, setSortActive] = useState(false);
+  const [test, setTest] = useState();
   const today = new Date().getTime();
 
   const contactData = useQuery(['test'], () =>
@@ -411,7 +412,6 @@ const Admin = () => {
       })
     })
   );
-
   var prtContent;
   var initBody;
   function startPrint(id) {
@@ -452,6 +452,37 @@ const Admin = () => {
     setShowFile(copyFile);
   }, [])
 
+  const newOrder = () => {
+    contactData.data&&contactData.data.sort((a,b)=>{
+      return b._id - a._id;
+    });
+  }
+  const oldOrder = () => {
+    contactData.data&&contactData.data.sort((a,b)=>{
+      return a._id - b._id;
+    });
+  }
+  const highMax = () => {
+    contactData.data&&contactData.data.sort((a,b)=>{
+      return b.max - a.max;
+    });
+  }
+  const lowMax = () => {
+    contactData.data&&contactData.data.sort((a,b)=>{
+      return a.max - b.max;
+    });
+  }
+  if (dataSort == 'new') {  
+    newOrder();
+  } else if(dataSort == 'old') {
+    oldOrder();
+  } else if(dataSort == 'high') {
+    highMax()
+  } else if(dataSort == 'low') {
+    lowMax()
+  } else {
+    newOrder();
+  }
   return (
 
     <AdminBox>
@@ -461,28 +492,28 @@ const Admin = () => {
         </SortItem>
 
         <SortItem className={sortActive ? 'x1' : 'hide'}>
-          <MdOutlineWatchLater className="icon" />
+          <MdOutlineWatchLater className="icon" onClick={()=>{setDataSort('new'); setSortActive(!sortActive);}}/>
           <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
             <MdNorth/>
           </ItemBadge>
         </SortItem>
 
         <SortItem className={sortActive ? 'x2' : 'hide'}>
-          <MdOutlineWatchLater className="icon" />
+          <MdOutlineWatchLater className="icon" onClick={()=>{setDataSort('old'); setSortActive(!sortActive);}}/>
           <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
             <MdSouth/>
           </ItemBadge>
         </SortItem>
 
         <SortItem className={sortActive ? 'x3' : 'hide'}>
-          <MdOutlineMonetizationOn className="icon" />
+          <MdOutlineMonetizationOn className="icon" onClick={()=>{setDataSort('high'); setSortActive(!sortActive);}}/>
           <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
             <MdNorth/>
           </ItemBadge>
         </SortItem>
 
         <SortItem className={sortActive ? 'x4' : 'hide'}>
-          <MdOutlineMonetizationOn className="icon" />
+          <MdOutlineMonetizationOn className="icon" onClick={()=>{setDataSort('low'); setSortActive(!sortActive);}}/>
           <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
             <MdSouth/>
           </ItemBadge>
