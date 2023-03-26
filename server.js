@@ -9,6 +9,8 @@ const crypto = require('crypto');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
+const schedule = require('node-schedule');
+
 
 app.use(session({secret : 'madsens', resave : true, saveUninitialized: false}));
 app.use(passport.initialize());
@@ -222,6 +224,9 @@ app.post('/writememo', (req, res) => {
 	});
 });
 
+
+
+
 // 방문자 카운트
 app.post('/count', (req, res) => {
 	console.log(req.body.platform);
@@ -240,12 +245,24 @@ app.post('/count', (req, res) => {
 	}
 });
 
-var a = new Date();
-var as = a.getHours();
-console.log(as);
-if(as==11){
-	console.log('good');
-}
+const updateVisitorHistory = schedule.scheduleJob('0 59 23 * * *', () => {
+	db.collection('todaycounter').findOne({ name: 'today' }, (error, result) => {
+		db.collection('visitorhistory').insertOne({ date : nowLocale, pc : result.pc, mobile : result.mobile, total : result.total, utc : now}, (error, result) => {		
+		});
+	});
+	console.log('업뎃 실행');
+});
+
+const cleanTodayCounter = schedule.scheduleJob('0 0 0 * * *', () => {
+	db.collection('todaycounter').updateOne({ name: 'today' }, { $set: { total: 0, mobile: 0, pc: 0 } }, (error, result) => {
+	});
+	console.log('클린 실행');
+});
+
+
+
+
+
 
 app.use(express.static(path.join(__dirname, '/client/build')));
 

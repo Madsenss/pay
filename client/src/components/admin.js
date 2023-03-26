@@ -708,10 +708,10 @@ const Admin = () => {
 
   const platformCheck = () => {
     const filter = "win16|win32|win64|mac|macintel";
-    if(0 > filter.indexOf(navigator.platform.toLowerCase())){
-      return 'Mobile'
+    if(0>filter.indexOf(navigator.platform.toLowerCase())){
+      return 'Mobile';
     }else{
-      return 'PC'
+      return 'PC';
     }
   }
   const cookieCount = () => {
@@ -729,14 +729,11 @@ const Admin = () => {
   return (
     <>
       <NavBox>
-        <button onClick={()=>{
-          cookieCount();
-        }}>TEST</button>
         <NavLogo>
           <img src="sample2.png" alt="logo" />
           <p className="visitor">방문자<span>&nbsp;{countData.data && countData.data.total}명</span></p>
           <p className="readoff">미확인<span>&nbsp;{findRead && findRead.length}건</span></p>
-          <MdMenu className={'icon menu ' + `${showSearch ? 'active' : null}`} onClick={() => { setShowSearch(!showSearch) }}>TEST`</MdMenu>
+          <MdMenu className={'icon menu ' + `${showSearch ? 'active' : null}`} onClick={() => { setShowSearch(!showSearch) }}/>
         </NavLogo>
         <NavMenu x={showSearch ? '0%' : '-150%'}>
           <SearchBox>
