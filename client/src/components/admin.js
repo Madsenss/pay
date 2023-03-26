@@ -550,7 +550,6 @@ const ItemBadge = styled.span`
   top: -15px;
   right: -13px;
   color: lightseagreen;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -583,7 +582,6 @@ const NullCompany = styled.div`
   }
 `
 
-
 const Admin = () => {
 
   // NAV
@@ -607,7 +605,7 @@ const Admin = () => {
   const navigate = useNavigate();
 
   // QUERY
-  const contactData = useQuery(['dbdata'], () =>
+  const contactData = useQuery(['contactdata'], () =>
     axios.get('http://localhost:8080/contactdata').then((result) => {
       return result.data.sort((a, b) => {
         return b._id - a._id;
@@ -618,6 +616,12 @@ const Admin = () => {
   const searchFilter = contactData.data && contactData.data.filter((item) => {
     return item.company.toUpperCase().includes(search.toUpperCase());
   });
+  const countData = useQuery(['countdata'], () => 
+    axios.get('http://localhost:8080/todaycount').then((result) => {
+      return result.data;
+    })
+  );
+
   // PRINT
   var prtContent;
   var initBody;
@@ -697,12 +701,40 @@ const Admin = () => {
     setShowFile(copyFile);
   }, [])
 
+  // 방문자 카운터
+  const getCookie = (name) => (
+    document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+  )
+
+  const platformCheck = () => {
+    const filter = "win16|win32|win64|mac|macintel";
+    if(0 > filter.indexOf(navigator.platform.toLowerCase())){
+      return 'Mobile'
+    }else{
+      return 'PC'
+    }
+  }
+  const cookieCount = () => {
+    axios.post('http://localhost:8080/count', { platform : platformCheck().toString() });
+    document.cookie = 'cookieCheck=true'
+  };
+  useEffect(()=>{
+    if( getCookie('cookieCheck') == 'true' ) {
+      document.cookie = `cookieCheck=true; Max-Age=${60 * 60 * 24}`; 
+    } else {
+      cookieCount();
+    }
+  },[]);
+
   return (
     <>
       <NavBox>
+        <button onClick={()=>{
+          cookieCount();
+        }}>TEST</button>
         <NavLogo>
           <img src="sample2.png" alt="logo" />
-          <p className="visitor">방문자<span>&nbsp;1명</span></p>
+          <p className="visitor">방문자<span>&nbsp;{countData.data && countData.data.total}명</span></p>
           <p className="readoff">미확인<span>&nbsp;{findRead && findRead.length}건</span></p>
           <MdMenu className={'icon menu ' + `${showSearch ? 'active' : null}`} onClick={() => { setShowSearch(!showSearch) }}>TEST`</MdMenu>
         </NavLogo>
@@ -720,37 +752,31 @@ const Admin = () => {
       <AdminBox>
 
         <SortBox>
+          
           <SortItem className="z">
             <MdOutlineChangeCircle className={'icon ' + `${sortActive ? 'active' : 'noneactive'}`} onClick={() => { setSortActive(!sortActive) }} />
           </SortItem>
 
           <SortItem className={sortActive ? 'x1' : 'hide'}>
-            <MdOutlineWatchLater className="icon" onClick={() => { setDataSort('new'); setSortActive(!sortActive); }} />
-            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
-              <MdNorth />
-            </ItemBadge>
+            <MdOutlineWatchLater className="icon" onClick={() => { setDataSort('new'); setSortActive(!sortActive); }}/>
+            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}><MdNorth/></ItemBadge>
           </SortItem>
 
           <SortItem className={sortActive ? 'x2' : 'hide'}>
-            <MdOutlineWatchLater className="icon" onClick={() => { setDataSort('old'); setSortActive(!sortActive); }} />
-            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
-              <MdSouth />
-            </ItemBadge>
+            <MdOutlineWatchLater className="icon" onClick={() => { setDataSort('old'); setSortActive(!sortActive); }}/>
+            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}><MdSouth/></ItemBadge>
           </SortItem>
 
           <SortItem className={sortActive ? 'x3' : 'hide'}>
-            <MdOutlineMonetizationOn className="icon" onClick={() => { setDataSort('high'); setSortActive(!sortActive); }} />
-            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
-              <MdNorth />
-            </ItemBadge>
+            <MdOutlineMonetizationOn className="icon" onClick={() => { setDataSort('high'); setSortActive(!sortActive); }}/>
+            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}><MdNorth/></ItemBadge>
           </SortItem>
 
           <SortItem className={sortActive ? 'x4' : 'hide'}>
-            <MdOutlineMonetizationOn className="icon" onClick={() => { setDataSort('low'); setSortActive(!sortActive); }} />
-            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}>
-              <MdSouth />
-            </ItemBadge>
+            <MdOutlineMonetizationOn className="icon" onClick={() => { setDataSort('low'); setSortActive(!sortActive); }}/>
+            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}><MdSouth/></ItemBadge>
           </SortItem>
+
         </SortBox>
 
         <ContactBox>
@@ -924,8 +950,6 @@ const Admin = () => {
                         )
                       })
                     }
-
-
                   </FileBox>
                 </ContactItem>
               )
@@ -936,7 +960,7 @@ const Admin = () => {
 
       </AdminBox>
       {
-        searchFilter && searchFilter.length == 0
+        searchFilter && searchFilter.length === 0
         ? <NullCompany>일치하는 업체명이 존재하지 않습니다</NullCompany>
         : null
       }

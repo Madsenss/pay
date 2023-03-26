@@ -128,6 +128,11 @@ app.get('/contactdata', (req, res) => {
 	});
 });
 
+app.get('/todaycount', (req, res) => {
+	db.collection('todaycounter').findOne({name : 'today'}, (error, result) => {
+		res.send(result);
+	});
+});
 
 // 폴더 파일 송신
 app.get('/download/:fileName', (req, res) => {
@@ -217,6 +222,30 @@ app.post('/writememo', (req, res) => {
 	});
 });
 
+// 방문자 카운트
+app.post('/count', (req, res) => {
+	console.log(req.body.platform);
+	if(req.body.platform == 'PC'){
+		db.collection('todaycounter').updateOne({ name: 'today' }, { $inc: { total: 1, pc: 1 } }, (error, result) => {
+			db.collection('visitorcounter').updateOne({ name: 'total'}, { $inc: { totalVisitor: 1, totalPC : 1 }, }, (error, result) => {
+
+			});
+		});
+	} else if(req.body.platform == 'Mobile') {
+		db.collection('todaycounter').updateOne({ name: 'today' }, { $inc: { total: 1, mobile: 1 } }, (error, result) => {
+			db.collection('visitorcounter').updateOne({ name: 'total'}, { $inc: { totalVisitor: 1, totalMobile : 1 }, }, (error, result) => {
+
+			});
+		});
+	}
+});
+
+var a = new Date();
+var as = a.getHours();
+console.log(as);
+if(as==11){
+	console.log('good');
+}
 
 app.use(express.static(path.join(__dirname, '/client/build')));
 
