@@ -417,7 +417,7 @@ const Contact = () => {
   
   return (
     <>
-      <form method="POST" action="http://localhost:8080/uploadfile" encType="multipart/form-data" acceptCharset="UTF-8">
+      <form method="POST" action="/uploadfile" encType="multipart/form-data" acceptCharset="UTF-8">
       <ContactBox>
 
         <FormBox>
@@ -528,7 +528,7 @@ const Contact = () => {
         </FormBox>
 
         <SubmitBtn type="submit" dp={mMax == null ? 'none' : null} onClick={()=>{
-          axios.post('http://localhost:8080/uploaddata', {
+          axios.post('/uploaddata', {
             company : company,
             bn : business,
             phone : phone,

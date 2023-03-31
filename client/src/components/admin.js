@@ -14,6 +14,7 @@ const NavBox = styled.div`
   width: 100%;
   height: 60px;
   position: fixed;
+  top: 0px;
   border-bottom: 4px solid rgb(0, 0, 0, 0.1);
   .icon {
     font-size: 28px;
@@ -26,7 +27,6 @@ const NavBox = styled.div`
     }
   }
   @media screen and (max-width: 800px) {
-    height: fit-content;
     border: none;
   }
 `
@@ -74,6 +74,7 @@ const NavLogo = styled.div`
   }
   @media screen and (max-width: 800px) {
     width: 100%;
+    height: 100%;
     justify-content: center;
     padding: 10px 0px 10px 0px;
     border-bottom: 4px solid rgb(0, 0, 0, 0.1);
@@ -114,6 +115,7 @@ const NavMenu = styled.div`
   }
   @media screen and (max-width: 800px) {
     width: 90%;
+    height: 100%;
     margin-left: 5%;
     margin-top: 15px;
     box-shadow: 2px 2px 6px 1px rgb(0, 0, 0, 0.2);
@@ -606,7 +608,7 @@ const Admin = () => {
 
   // QUERY
   const contactData = useQuery(['contactdata'], () =>
-    axios.get('http://localhost:8080/contactdata').then((result) => {
+    axios.get('/contactdata').then((result) => {
       return result.data.sort((a, b) => {
         return b._id - a._id;
       })
@@ -617,7 +619,7 @@ const Admin = () => {
     return item.company.toUpperCase().includes(search.toUpperCase());
   });
   const countData = useQuery(['countdata'], () => 
-    axios.get('http://localhost:8080/todaycount').then((result) => {
+    axios.get('/todaycount').then((result) => {
       return result.data;
     })
   );
@@ -715,11 +717,11 @@ const Admin = () => {
     }
   }
   const cookieCount = () => {
-    axios.post('http://localhost:8080/count', { platform : platformCheck().toString() });
+    axios.post('/count', { platform : platformCheck().toString() });
     document.cookie = 'cookieCheck=true'
   };
   useEffect(()=>{
-    if( getCookie('cookieCheck') == 'true' ) {
+    if(getCookie('cookieCheck') == 'true') {
       document.cookie = `cookieCheck=true; Max-Age=${60 * 60 * 24}`; 
     } else {
       cookieCount();
@@ -728,26 +730,24 @@ const Admin = () => {
 
   return (
     <>
-      <NavBox>
-        <NavLogo>
-          <img src="sample2.png" alt="logo" />
-          <p className="visitor">방문자<span>&nbsp;{countData.data && countData.data.total}명</span></p>
-          <p className="readoff">미확인<span>&nbsp;{findRead && findRead.length}건</span></p>
-          <MdMenu className={'icon menu ' + `${showSearch ? 'active' : null}`} onClick={() => { setShowSearch(!showSearch) }}/>
-        </NavLogo>
-        <NavMenu x={showSearch ? '0%' : '-150%'}>
-          <SearchBox>
-            <input type="text" className={showInput ? 'active' : null} onChange={handleSearch} placeholder="업체명을 입력하세요"/>
-            <MdSearch className="icon" onClick={() => { setShowInput(!showInput) }} />
-          </SearchBox>
-          <MdPowerSettingsNew className="icon mr" onClick={() => {
-            navigate('/login')
-          }} />
-        </NavMenu>
-      </NavBox>
-
       <AdminBox>
-
+        <NavBox>
+          <NavLogo>
+            <img src="sample2.png" alt="logo" />
+            <p className="visitor">방문자<span>&nbsp;{countData.data && countData.data.total}명</span></p>
+            <p className="readoff">미확인<span>&nbsp;{findRead && findRead.length}건</span></p>
+            <MdMenu className={'icon menu ' + `${showSearch ? 'active' : null}`} onClick={() => { setShowSearch(!showSearch) }}/>
+          </NavLogo>
+          <NavMenu x={showSearch ? '0%' : '-150%'}>
+            <SearchBox>
+              <input type="text" className={showInput ? 'active' : null} onChange={handleSearch} placeholder="업체명을 입력하세요"/>
+              <MdSearch className="icon" onClick={() => { setShowInput(!showInput) }} />
+            </SearchBox>
+            <MdPowerSettingsNew className="icon mr" onClick={() => {
+              navigate('/login')
+            }} />
+          </NavMenu>
+        </NavBox>
         <SortBox>
           
           <SortItem className="z">
@@ -850,7 +850,7 @@ const Admin = () => {
                     {
                       item.read === 'off'
                         ? <><MdOutlineToggleOff className="icon" onClick={() => {
-                          axios.post('http://localhost:8080/readon', {
+                          axios.post('/readon', {
                             no: item._id
                           }).then((result) => {
                             alert(result.data);
@@ -859,7 +859,7 @@ const Admin = () => {
                           });
                         }} /><span>미확인</span></>
                         : <><MdOutlineToggleOn className="icon on" onClick={() => {
-                          axios.post('http://localhost:8080/readoff', {
+                          axios.post('/readoff', {
                             no: item._id
                           }).then((result) => {
                             alert(result.data);
@@ -882,7 +882,7 @@ const Admin = () => {
                   <MemoBox dp={memo[i] ? 'visible' : 'hidden'}>
                     <textarea onChange={handleMemo} defaultValue={item.memo} />
                     <MdOutlineCheck className="save" onClick={() => {
-                      axios.post('http://localhost:8080/writememo', {
+                      axios.post('/writememo', {
                         no: item._id,
                         text: memoText
                       }).then((result) => {
@@ -905,7 +905,7 @@ const Admin = () => {
                     <p>비밀번호</p>
                     <input type="password" onChange={handlePassword} />
                     <button onClick={() => {
-                      axios.delete('http://localhost:8080/delete', {
+                      axios.delete('/delete', {
                         data: {
                           no: item._id,
                           password: password
@@ -943,7 +943,7 @@ const Admin = () => {
                     {
                       item.saveFileName && item.saveFileName.map((item, i) => {
                         return (
-                          <FileItem key={i}><a href={'http://localhost:8080/download/' + `${item}`} download>{item}</a></FileItem>
+                          <FileItem key={i}><a href={'/download/' + `${item}`} download>{item}</a></FileItem>
                         )
                       })
                     }

@@ -44,8 +44,7 @@ const Nav = () => {
           <img src="sample2.png" alt="logo" onClick={()=>{(navigate('/'))}}/>
         </NavLogo>
         <NavMenu className="right">
-          <p>회사 소개</p>
-          <p onClick={()=>{navigate('/contact')}}>빠른 상담</p>
+          <p onClick={()=>{navigate('/contact')}}>상담 신청</p>
         </NavMenu>
       </NavBox>
     </>
