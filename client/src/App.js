@@ -7,14 +7,22 @@ import Footer from "./components/footer";
 import KakaoChat from "./components/kakaochat";
 import Login from "./components/login";
 import Nav from "./components/nav";
+import Contactt from "./components/contactt";
 
 function App() {
+  function setScreenSize() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }
+  useEffect(() => {
+    setScreenSize();
+  });
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<><Nav/><Banner/><KakaoChat/><Footer/></>}/>
         <Route path="*" element={<>돌아가</>}/>
-        <Route path="/contact" element={<><Nav/><Contact/><Back/></>}/>
+        <Route path="/contact" element={<><Nav/><Contactt/><Back/></>}/>
         <Route path="/login" element={<><Login/></>}/>
         <Route path="/admin" element={<><Admin/></>}/>
       </Routes>
