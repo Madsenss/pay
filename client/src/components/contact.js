@@ -510,7 +510,7 @@ const Contact = () => {
               {
                 fileName.map((item, i)=>{
                   return(
-                    <p>{i+1} - {item}</p>
+                    <p key={i}>{i+1} - {item}</p>
                   )
                 })
               }

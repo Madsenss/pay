@@ -13,13 +13,13 @@ const BackBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #aaa;
+  background-color: rgb(0, 0, 0, 0.15);
   color: #fff;
   transition: 0.5s;
   cursor: pointer;
   &:hover {
     background-color: transparent;
-    color: black;
+    color: rgb(138, 43, 226, 0.7);
     transform: translateX(-10px);
   }
 `
