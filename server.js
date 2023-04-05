@@ -10,6 +10,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const schedule = require('node-schedule');
+require('date-utils');
 
 
 app.use(session({secret : 'madsens', resave : true, saveUninitialized: false}));
@@ -21,12 +22,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.json());
 var db;
-
-var today = new Date();
+const td = Date.now();
+var today = new Date(td);
 var nowLocale = today.toLocaleString();
 var now = today.getTime();
-var destructionDate = now + 31536000000;
 
+var destructionDate = now + 31536000000;
 var multer = require('multer');
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {

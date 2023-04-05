@@ -1,63 +1,16 @@
 import { useState } from "react";
-
 import styled from "styled-components";
 import axios from "axios";
+import { MdArrowBackIos, MdArrowForwardIos, MdAttachFile, MdChangeCircle, MdCheck, MdClose, MdEditNote, MdLaptopMac, MdManageAccounts, MdOutlineFastfood, MdPrecisionManufacturing, MdSend} from "react-icons/md"
+import { GiLargeDress } from "react-icons/gi";
 
-import { MdArrowBackIos, MdArrowForwardIos, MdChangeCircle, MdUploadFile } from "react-icons/md"
 
 const ContactBox = styled.div`
   width: 100%;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   display: flex;
   justify-content: center;
   align-items: center;
-`
-const StepBox = styled.div`
-  position: fixed;
-  top: 100px;
-  width: fit-content;
-  height: fit-content;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
-const Hr = styled.hr`
-  border: 1px solid #aaa;
-  width: 5vw;
-  display: inline-block;
-  margin-left: 0;
-  margin-right: 0;
-  margin: 0px;
-`
-const StepInner = styled.div`
-  width: 4vw;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-const StepText = styled.span`
-  position: absolute;
-  top: 3vw;
-  font-size: 0.8vw;
-  font-weight: ${props=>props.fw};
-`
-const Circle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.2vw;
-  height: 2.2vw;
-  
-  border-radius: 50%;
-  background-color: ${props=>props.bg};
-
-  color: #eee;
-  font-size: 1.3vw;
-  font-weight: bold;
-
-  transform: scale(${props=>props.scale});
-  transition: all 0.5s;
 `
 const FormBox = styled.div`
   width: 40%;
@@ -78,6 +31,7 @@ const FormBox = styled.div`
   }
   @media screen and (max-width: 600px) {
     width: 100%;
+    height: 60%;
   }
 `
 const Form = styled.div`
@@ -85,54 +39,133 @@ const Form = styled.div`
   height: 100%;
   flex: none;
   transition: 1s;
-  transform: translateX(${props=>props.tx+'%'});
+  transform: translateX(${props => props.tx + '%'});
   display: flex;
   align-items: center;
   justify-content: center;
   .title {
-    font-size: 20px;
-    font-weight: bold;
-    position: absolute;
-    top: 36%;
-  }
-  .bn {
-    position: absolute;
-    bottom: 30%;
-  }
-  .url {
-    position: absolute;
-    bottom: 16%;
-  }
-  .another {
-    position: absolute;
-    bottom: 30%;
-  }
-  .cbtitle {
-    font-size: 20px;
-    font-weight: bold;
-    position: absolute;
-    top: 15%;
-  }
-  .filetitle {
-    font-size: 20px;
-    font-weight: bold;
-    position: absolute;
-    top: 15%;
-  }
-  input[id="cb"] + label {
+    color: rgb(173, 106, 235);
     font-size: 18px;
-    margin-left: 10px;
+    font-weight: bold;
+    position: absolute;
+    top: 10%;
   }
-  input[id="cb"]:checked ~ label {
+  .title-top {
+    color: rgb(173, 106, 235);
+    font-size: 18px;
+    font-weight: bold;
+    position: absolute;
+    top: 20%;
+  }
+  .cbouter {
+    width: fit-content;
+    margin: auto;
+  }
+  .maxtext {
+    font-weight: bold;
+    color: rgb(173, 106, 235);
+  }
+`
+
+
+const TextInput = styled.input`
+  display: ${props => props.dp};
+  width: 230px;
+  height: 25px;
+  border: 1.5px solid #aaa;
+  border-radius: 3px;
+  font-size: 14px;
+  padding-left: 10px;
+  transition: all 0.3s;
+  &:hover {
+    border: 1.5px solid black;
+  }
+  &:focus {
+    outline: none;
+    border: 1.5px solid rgb(138, 43, 226, 0.7);
+  }
+  &.another {
+    width: 235px;
+    margin-top: 10px;
+  }
+  &.url {
+    margin-top: 20px;
+  }
+  &.max {
+    padding-left: 0;
+    padding-right: 10px;
+    text-align: end;
+    margin-right: 5px;
+  }
+
+`
+const CheckBox = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  .cb {
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    border: 1.5px solid rgb(138, 43, 226, 0.7);
+    background-color: rgb(205, 205, 205, 0.1);
+    border-radius: 2px;
+    margin-right: 10px;
+    color: rgb(205, 205, 205, 0.5);
+    &.active {
+      background-color: rgb(138, 43, 226, 0.7);
+      color: #fff;
+    }
+  }
+  label {
     font-weight: bold;
   }
 `
+const SelectBox = styled.div`
+  width: 250px;
+  height: 200px;
+`
+const SelectItem = styled.div`
+  cursor: pointer;
+  display: inline-flex;
+  position: relative;
+  width: 30%;
+  height: 45%;
+  margin: 1.6% 1.6% 1.6% 1.6%;
+  border-radius: 8px;
+  border: 1.5px solid #eee;
+  box-shadow: 1px 1px 3px 1px rgb(0, 0, 0, 0.2);
+  vertical-align: top;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  .icon {
+    position: absolute;
+    top: 23px;
+    font-size: 30px;
+  }
+  p {
+    font-weight: bold;
+    font-size: 14px;
+    position: absolute;
+    bottom: 8px;
+  }
+  &:hover {
+    border: 1.5px solid rgb(138, 43, 226, 0.7);
+  }
+  &.active {
+    box-shadow: inset 0px 0px 4px 4px rgb(0, 0, 0, 0.3);
+    opacity: 0.5;
+  }
+`
+
+
 const LBtnBox = styled.div`
   width: fit-content;
   height: fit-content;
   position: absolute;
   left: -11.4%;
-  top: 45.5%;
+  top: 46.5%;
   z-index: 999;
   display: flex;
   transition: 0.5s;
@@ -142,7 +175,7 @@ const LBtnBox = styled.div`
     cursor: pointer;
     font-size: 40px;
     &:hover {
-      color: black;
+      color: rgb(138, 43, 226, 0.7);
     }
   }
 `
@@ -151,7 +184,7 @@ const RBtnBox = styled.div`
   height: fit-content;
   position: absolute;
   right: -10%;
-  top: 45.5%;
+  top: 46.5%;
   z-index: 999;
   display: flex;
   transition: 0.5s;
@@ -161,164 +194,140 @@ const RBtnBox = styled.div`
     cursor: pointer;
     font-size: 40px;
     &:hover {
-      color: black;
+      color: rgb(138, 43, 226, 0.7);
     }
   }
 `
-const Input = styled.div`
-  position: relative;
-  display: ${props=>props.dp};
-  span {
-    padding-left: 10px;
-  }
-  input {
-    width: 300px;
-    height: 30px;
-    position: relative;
-    background: none;
-    font-size: 16px;
-    border: 1.5px solid #aaa;
-    padding-left: 10px;
-    @media screen and (max-width: 600px) {
-      width: 200px;
-    }
-    &.max {
-      text-align: end;
-      padding-left: 0;
-      padding-right: 10px;
-    }
-  }
-  input:hover {
-    border: 1.5px solid black;
-  }
-  input:focus { 
-    outline: none;
-    border: 1.5px solid #fff;
-  }
-  input:valid {
-    border: 1.5px solid #eee;
-  }
-  label {
-    font-size: 14px;
-    position: absolute;
-    color: #aaa;
-    left: 15px;
-    bottom: 8px;
-    transition: all 0.2s;
-  }
-
-  input:focus ~ label, input:valid ~ label {
-    bottom: 25px;
-    left: 7px;
-    font-weight: bold;
-    color: black;
-  }
-  
-`
-const Select = styled.select`
-  width: 315px;
-  height: 35px;
-  border: 1.5px solid #aaa;
-
-  font-size: 14px;
-  padding-left: 8px;
-  @media screen and (max-width: 600px) {
-    width: 215px;
-  }
-`
-const SubmitBtn = styled.button`
+const LastButton = styled.div`
   position: absolute;
-  left: 147px;
-  bottom: 7%;
-  z-index: 999;
-  width: 110px;
-  height: 40px;
-
+  bottom: 20%;
+  display: ${props => props.dp};
   cursor: pointer;
-
+  width: fit-content;
+  height: fit-content;
+  padding: 8px 18px 8px 18px;
+  text-align: center;
   background-color: rgb(138, 43, 226, 0.7);
-  border: none;
+  box-shadow: 0px 1px 3px 2px rgb(0, 0, 0, 0.1);
+  border-radius: 6px;
   color: white;
-  border-radius: 8px;
-  font-size: 16px;
   font-weight: bold;
-  transition: 0.3s;
-  display: ${props=>props.dp};
+  transition: all 0.3s;
   &:hover {
-    opacity: 0.55;
+    opacity: 0.6;
   }
 `
-const CheckBox = styled.div`
-`
-const CheckInner = styled.div`
-  margin-bottom: 10px;
-`
-const SideResultBox = styled.div`
+
+
+const SubmitOverlay = styled.div`
+  display: ${props => props.dp};
+  z-index: 998;
+  width: 100%;
+  height: 100vh;
+  background-color: rgb(0, 0, 0, 0.2);
   position: fixed;
-  top: 0px;
-  left: 0px;
-  width: fit-content;
-  height: 100%;
+  align-items: center;
+  justify-content: center;
+`
+const BoxOuter = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  display: ${props => props.dp};
+`
+const SubmitBox = styled.div`
   display: flex;
   align-items: center;
   text-align: center;
-  /* border: 1px solid black; */
-  padding-left: 30px;
-`
-const ResultInner = styled.div`
+  position: absolute;
+  z-index: 999;
+  padding: 50px 20px 25px 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 0px 6px 1.5px rgb(0, 0, 0, 0.2);
   width: fit-content;
   height: fit-content;
-  
+  .close-btn {
+    cursor: pointer;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-size: 26px;
+    color: rgb(138, 43, 226, 0.7);
+    transition: all 0.3s;
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+
 `
-const ResultItem = styled.div`
-  display: ${props=>props.dp};
-  width: 350px;
+const SubmitInner = styled.div`
+  width: fit-content;
   height: fit-content;
-  padding: 15px 0px 15px 0px;
-  margin-bottom: 40px;
-  border: 1.5px solid black;
+`
+const SubmitItem = styled.div`
+  box-shadow: 0px 0px 4px 0.5px rgb(0, 0, 0, 0.1);
+  width: 260px;
+  height: fit-content;
+  padding: 10px 0px 10px 0px;
+  margin-bottom: 20px;
+  border: 1.5px solid #eee;
   border-radius: 10px;
   position: relative;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
+  color: rgb(0, 0, 0, 0.9);
   .title {
-    font-size: 18px;
+    font-size: 14px;
     position: absolute;
-    top: -10px;
+    top: -9px;
     left: 10px;
     font-weight: bold;
     margin-bottom: 10px;
     background-color: #fff;
-    padding: 0px 3px 0px 3px;
+    color: rgb(173, 106, 235);
+    border-radius: 50%;
+    padding: 0px 2px 0px 2px;
   }
   .cng {
     position: absolute;
-    top: -13px;
-    right: -14px;
-    font-size: 28px;
+    top: -12px;
+    right: -12px;
+    font-size: 22px;
     background-color: #fff;
     border-radius: 50%;
     color: rgb(138, 43, 226, 0.7);
-
     cursor: pointer;
+    transition: all 0.3s;
+    &:hover {
+      color: #eee;
+    }
   }
 `
 const PaymentItem = styled.div`
-  width: 30%;
-  height: 40px;
+  width: 29%;
+  height: 25px;
   margin: 5px 4px 0px 4px;
   background-color: rgb(138, 43, 226, 0.7);
+  box-shadow: 0px 0px 1px 1px rgb(0, 0, 0, 0.2);
   color: #fff;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   display: inline-flex;
   justify-content: center;
   vertical-align: top;
   align-items: center;
-  display: ${props=>props.dp};
+  display: ${props => props.dp};
 `
-const FileInput = styled.div`
+const SubmitButtonBox = styled.div`
+  width: 260px;
+  height: fit-content;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
   input[type="file"] {
     position: absolute;
     width: 0;
@@ -327,54 +336,79 @@ const FileInput = styled.div`
     overflow: hidden;
     border: 0;
   }
-
   label {
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    font-size: 40px;
-    padding-bottom:10px ;
   }
+`
+const SubmitButton = styled.div`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45%;
+  height: 30px;
+  background-color: rgb(173, 106, 235);
+  box-shadow: 0px 0px 4px 2px rgb(0, 0, 0, 0.2);
+  color: white;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  /* padding-right: 17px; */
+  transition: all 0.3s;
 
-  p {
-    padding-top: 10px;
-    font-size: 16px;
-    font-weight: bold;
+  .icon {
+    font-size: 22px;
+    margin-right: 5px;
   }
+  &:hover {
+    opacity: 0.6;
+  }
+`
+const Tolltip = styled.div`
+  position: absolute;
+  width: 200px;
+  height: 400px;
+  background-color: red;
 `
 
 const Contact = () => {
 
   const [x, setX] = useState(0);
-  
-  const [check, setCheck] = useState(false);
-  const [show, setShow] = useState(false);
-
   const [company, setCompany] = useState(null);
   const [business, setBusiness] = useState(null);
   const [phone, setPhone] = useState(null);
-  const [category, setCategry] = useState(null);
+  const [category, setCategory] = useState(null);
   const [another, setAnother] = useState(null);
-  const [payment] = useState([]);
+  const [check, setCheck] = useState([
+    { key: '잘 모르겠음', value: 'none' },
+    { key: '수기결제', value: 'none' },
+    { key: 'PAYCO', value: 'none' },
+    { key: '네이버페이', value: 'none' },
+    { key: '카카오페이', value: 'none' },
+    { key: '애플페이', value: 'none' },
+    { key: 'SMS결제', value: 'none' },
+    { key: '카드결제API', value: 'none' }
+  ]);
+  const payment = []
   const [mMax, setMMax] = useState(null);
   const [url, setURL] = useState(null);
   const [fileName] = useState([]);
-  const formData = new FormData();
-  // const form = useRef();
-  // const sendEmail = (e) => {
-  //   emailjs.sendForm('service_13jorms', 'template_ghdzid4', form.current, 'iCX9sUDw24-Idue2Z')
-  //     .then((result) => {
-  //       console.log(result.text);
-  //     }, (error) => {
-  //       console.log(error.text);
-  //     });
-  // };
+  const [modal, setModal] = useState(false);
+
+  var filter = check.filter(v => v.value == 'checked');
+  for (let i = 0; i < filter.length; i++) {
+    payment.push(filter[i].key);
+  }
 
   const handleFile = () => {
     fileName.splice(0);
     var files = document.getElementById('file').files;
-    for(var i = 0; i < files.length; i++){
+    for (var i = 0; i < files.length; i++) {
       fileName.push(files[i].name);
     }
   };
@@ -387,16 +421,6 @@ const Contact = () => {
   const handlePhone = (e) => {
     setPhone(e.target.value);
   };
-  const handleCategory = (e) => {
-    setCategry(e.target.value);
-  };
-  const handlePayment = (e) => {
-    if(e.target.checked) {
-      payment.push(e.target.value);
-    } else {
-      payment.pop(e.target.value);
-    }
-  };
   const handleMax = (e) => {
     setMMax(e.target.value);
   };
@@ -407,239 +431,196 @@ const Contact = () => {
     setAnother(e.target.value);
   };
   const prev = () => {
-    if(x === 0){return null};
+    if (x === 0) { return null };
     setX(x + 100);
   };
   const next = () => {
-    if(x === -500){return null};
+    if (x === -500) { return null };
     setX(x - 100);
   };
-  
+
   return (
     <>
-      <form method="POST" action="/uploadfile" encType="multipart/form-data" acceptCharset="UTF-8">
-      <ContactBox>
+      <SubmitOverlay dp={modal ? 'flex' : 'none'} onClick={() => { setModal(false); }} />
+      <BoxOuter dp={modal ? 'flex' : 'none'}>
+        <SubmitBox>
+          <MdClose className="close-btn" onClick={() => { setModal(false); }} />
+          <SubmitInner>
 
-        <FormBox>
+            <SubmitItem>
+              <p className="title">회사명</p>
+              <p>{company}</p>
+              <MdChangeCircle className="cng" onClick={() => { setX(0); setModal(false); }} />
+            </SubmitItem>
 
-          <LBtnBox className="lbtn">
-            <MdArrowBackIos className="icon" onClick={()=>{prev();}}/>
-          </LBtnBox>
-          <RBtnBox className="rbtn">
-            <MdArrowForwardIos className="icon" onClick={()=>{next();}}/>
-          </RBtnBox>
-    
-          <Form tx={x}>
-            <Input>
-              <input type="text" onChange={handleCompany} name="company"/>
-              <label>회사명</label>
-            </Input>
-            <Input className="bn">
-              <input type="text" onChange={handleBusiness} name="business"/>
-              <label>사업자 등록번호</label>
-            </Input>
-          </Form>
-          
-          <Form tx={x}>
-            <Input>
-              <input type="text" onChange={handlePhone} name="phone"/>
-              <label>연락처</label>
-            </Input>
-          </Form>
+            <SubmitItem>
+              <p className="title">사업자 등록번호</p>
+              <p>{business}</p>
+              <MdChangeCircle className="cng" onClick={() => { setX(-100); setModal(false); }} />
+            </SubmitItem>
 
-          <Form tx={x}>
-            <span className="title">업종을 선택하세요</span>
-            <Select onChange={handleCategory} name="category">
-              <option value="">업종을 선택하세요</option>
-              <option value="의류">의류</option>
-              <option value="식품">식품</option>
-              <option value="제조">제조</option>
-              <option value="전자기기">전자기기</option>
-              <option value="비실물상품">비실물 상품</option>
-              <option value="기타">기타</option>
-            </Select>
-            <Input className="another" dp={category === '기타' ? 'block' : 'none'}>
-              <input type="text" onChange={handleAnother} name="another"/>
-              <label>업종을 선택하세요</label>
-            </Input>
-          </Form>
+            <SubmitItem>
+              <p className="title">연락처</p>
+              <p>{phone}</p>
+              <MdChangeCircle className="cng" onClick={() => { setX(-200); setModal(false); }} />
+            </SubmitItem>
 
-          <Form tx={x}>
-            <span className="cbtitle">결제수단을 선택하세요</span>
-            <CheckBox>
-              <CheckInner>
-                <input type="checkbox" id="cb" value="수기결제" onChange={handlePayment} onClick={()=>{setShow(!show)}} name="payment"/>
-                <label className="cb" htmlFor="cb">수기결제</label>
-              </CheckInner>
-              <CheckInner>
-                <input type="checkbox" id="cb" value="PAYCO" onChange={handlePayment} onClick={()=>{setShow(!show)}} name="payment"/>
-                <label className="cb" htmlFor="cb">PAYCO</label>
-              </CheckInner>
-              <CheckInner>
-                <input type="checkbox" id="cb" value="네이버페이" onChange={handlePayment} onClick={()=>{setShow(!show)}} name="payment"/>
-                <label className="cb" htmlFor="cb">네이버페이</label>
-              </CheckInner>
-              <CheckInner>
-                <input type="checkbox" id="cb" value="카카오페이" onChange={handlePayment} onClick={()=>{setShow(!show)}} name="payment"/>
-                <label className="cb" htmlFor="cb">카카오페이</label>
-              </CheckInner>
-              <CheckInner>
-                <input type="checkbox" id="cb" value="SMS결제" onChange={handlePayment} onClick={()=>{setShow(!show)}} name="payment"/>
-                <label className="cb" htmlFor="cb">SMS결제</label>
-              </CheckInner>
-              <CheckInner>
-                <input type="checkbox" id="cb" value="카드결제API" onChange={handlePayment} onClick={()=>{setCheck(!check)}} name="payment"/>
-                <label className="cb" htmlFor="cb">카드결제API</label>
-              </CheckInner>
-              <CheckInner>
-                <input type="checkbox" id="cb" value="잘 모르겠음" onChange={handlePayment} onClick={()=>{setShow(!show)}} name="payment"/>
-                <label className="cb" htmlFor="cb">잘 모르겠음</label>
-              </CheckInner>
-            </CheckBox>
-            <Input className="url" dp={check ? 'block' : 'none'}>
-              <input type="text" onChange={handleURL} name="url"/>
-              <label>URL</label>
-            </Input>
-          </Form>
+            <SubmitItem>
+              <p className="title">업종</p>
+              <p>{category}{another == null ? '' : ' - ' + another}</p>
+              <MdChangeCircle className="cng" onClick={() => { setX(-300); setModal(false); }} />
+            </SubmitItem>
 
-          <Form tx={x} onMouseOver={()=>{setShow(!show)}} onMouseEnter={()=>{setShow(!show)}}>
-            <span className="filetitle">첨부파일을 선택하세요</span>
-            <FileInput>
-              <label for="file"><MdUploadFile/></label> 
-              <input type="file" name="filename" id="file" acceptCharset="UTF-8" onChange={handleFile} multiple/>
+            <SubmitItem>
+              <p className="title">결제수단</p>
               {
-                fileName.map((item, i)=>{
-                  return(
-                    <p key={i}>{i+1} - {item}</p>
+                payment.map((item, i) => {
+                  return (
+                    <PaymentItem key={i}>
+                      <span>{item}</span>
+                    </PaymentItem>
                   )
                 })
               }
-            </FileInput>
-          </Form>
+              <MdChangeCircle className="cng" onClick={() => { setX(-400); setModal(false); }} />
+            </SubmitItem>
+
+            <SubmitItem>
+              <p className="title">월 한도</p>
+              <p>{mMax}백만 원</p>
+              <MdChangeCircle className="cng" onClick={() => { setX(-500); setModal(false); }} />
+            </SubmitItem>
+
+            <form method="POST" action="/uploadfile" encType="multipart/form-data" acceptCharset="UTF-8">
+              <SubmitButtonBox>
+                <SubmitButton>
+                  <Tolltip></Tolltip>
+                  <label for="file">
+                    <MdAttachFile className="icon" />
+                    첨부파일
+                  </label>
+                </SubmitButton>
+                <input type="file" name="filename" id="file" acceptCharset="UTF-8" onChange={handleFile} multiple/>
+                <SubmitButton type="submit" onClick={() => {                
+                  axios.post('/uploaddata', {
+                    company: company,
+                    bn: business,
+                    phone: phone,
+                    category: category,
+                    another: another,
+                    payment: payment,
+                    fileName: fileName,
+                    url: url,
+                    max: mMax
+                  }).then((result) => {
+                    alert(result.data);
+                    setModal(false);
+                    window.location.replace('/')
+                  }).catch((error) => {
+                    alert(error);
+                  });
+                }}>
+                  <MdSend className="icon" />전송하기
+                </SubmitButton>
+              </SubmitButtonBox>
+            </form>
+
+          </SubmitInner>
+        </SubmitBox>
+      </BoxOuter>
+
+
+      <ContactBox>
+        <FormBox>
+
+          <LBtnBox className="lbtn">
+            <MdArrowBackIos className="icon" onClick={() => { prev(); }} />
+          </LBtnBox>
+          <RBtnBox className="rbtn">
+            <MdArrowForwardIos className="icon" onClick={() => { next(); }} />
+          </RBtnBox>
 
           <Form tx={x}>
-            <Input>
-              <input type="text" className="max" onChange={handleMax} name="mmax"/>
-              <label>월 한도</label>
-              <span>백만원</span>
-            </Input>
+            <span className="title-top">업체명을 입력해 주세요</span>
+            <TextInput type="text" placeholder="업체명" onChange={handleCompany} />
           </Form>
-    
+          <Form tx={x}>
+            <span className="title-top">사업자등록번호를 입력해 주세요</span>
+            <TextInput type="number" placeholder="-를 제외하고 입력해 주세요" onChange={handleBusiness} />
+          </Form>
+          <Form tx={x}>
+            <span className="title-top">연락처를 입력해 주세요</span>
+            <TextInput type="number" placeholder="-를 제외하고 입력해 주세요" onChange={handlePhone} />
+          </Form>
+          <Form tx={x}>
+            <span className="title">업종을 선택해 주세요</span>
+            <div>
+              <SelectBox>
+                <SelectItem className={category == '전자' ? 'active' : null} onClick={() => { setCategory('전자') }}>
+                  <MdLaptopMac className="icon" />
+                  <p>전자</p>
+                </SelectItem>
+                <SelectItem className={category == '제조' ? 'active' : null} onClick={() => { setCategory('제조') }}>
+                  <MdPrecisionManufacturing className="icon" />
+                  <p>제조</p>
+                </SelectItem>
+                <SelectItem className={category == '의류' ? 'active' : null} onClick={() => { setCategory('의류') }}>
+                  <GiLargeDress className="icon" />
+                  <p>의류</p>
+                </SelectItem>
+                <SelectItem className={category == '식품' ? 'active' : null} onClick={() => { setCategory('식품') }}>
+                  <MdOutlineFastfood className="icon" />
+                  <p>식품</p>
+                </SelectItem>
+                <SelectItem className={category == '서비스' ? 'active' : null} onClick={() => { setCategory('서비스') }}>
+                  <MdManageAccounts className="icon" />
+                  <p>서비스</p>
+                </SelectItem>
+                <SelectItem className={category == '기타' ? 'active' : null} onClick={() => { setCategory('기타') }}>
+                  <MdEditNote className="icon" />
+                  <p>기타</p>
+                </SelectItem>
+              </SelectBox>
+              <TextInput dp={category == '기타' ? 'block' : 'none'} className="another" onChange={handleAnother} placeholder="업종명을 입력해 주세요" />
+            </div>
+          </Form>
+          <Form tx={x}>
+            <span className="title">관심 있는 결제수단을 체크해 주세요</span>
+            <div>
+              <div className="cbouter">
+                {
+                  check.map((item, i) => {
+                    return (
+                      <CheckBox key={i}>
+                        <MdCheck className={'cb ' + `${check[i].value == 'checked' ? 'active' : null}`} onClick={() => {
+                          var copy = [...check];
+                          if (copy[i].value == 'none') {
+                            copy[i].value = 'checked'
+                          } else {
+                            copy[i].value = 'none'
+                          }
+                          setCheck(copy);
+                        }} />
+                        <label>{item.key}</label>
+                      </CheckBox>
+                    )
+                  })
+                }
+              </div>
+              <TextInput dp={check[7].value == 'checked' ? 'block' : 'none'} className="url" onChange={handleURL} placeholder="URL이 있으시면 입력해 주세요" />
+            </div>
+          </Form>
+          <Form tx={x}>
+            <span className="title-top">월 한도를 입력해 주세요</span>
+            <div>
+              <TextInput className="max" type="number" onChange={handleMax} onBlur={() => { window.scrollTo(0, NaN) }} /><span className="maxtext">백만 원</span>
+            </div>
+          </Form>
         </FormBox>
-
-        <SubmitBtn type="submit" dp={mMax == null ? 'none' : null} onClick={()=>{
-          axios.post('/uploaddata', {
-            company : company,
-            bn : business,
-            phone : phone,
-            category : category,
-            another : another,
-            payment : payment,
-            fileName : fileName,
-            url : url,
-            max : mMax
-          }).then((result) => {
-            alert(result.data);
-            window.location.replace('/')
-          }).catch((error) => {
-            alert(error);
-          });
-        }}>제출하기</SubmitBtn>
-      </ContactBox>  
-      </form>
-
-      <SideResultBox>
-        <ResultInner>
-
-          <ResultItem dp={company == null ? 'none' : 'block'}>
-            <p className="title">회사명</p>
-            <p>{company}</p>
-            <MdChangeCircle className="cng" onClick={()=>{setX(0);}}/>
-          </ResultItem>
-
-          <ResultItem dp={business == null ? 'none' : 'block'}>
-            <p className="title">사업자 등록번호</p>
-            <p>{business}</p>
-            <MdChangeCircle className="cng" onClick={()=>{setX(0);}}/>
-          </ResultItem>
-
-          <ResultItem dp={phone == null ? 'none' : 'block'}> 
-            <p className="title">연락처</p>
-            <p>{phone}</p>
-            <MdChangeCircle className="cng" onClick={()=>{setX(-100);}}/>
-          </ResultItem>
-
-          <ResultItem dp={category == null ? 'none' : 'block'}>
-            <p className="title">업종</p>
-            <p>{category}</p>
-            <MdChangeCircle className="cng" onClick={()=>{setX(-200);}}/>
-          </ResultItem>
-
-          <ResultItem dp={payment.length < 1 ? 'none' : 'block'}>
-            <p className="title">결제수단</p>        
-            {
-              payment.map((item, i)=>{
-                return(
-                  <PaymentItem key={i}>
-                    <span>{item}</span>
-                  </PaymentItem>
-                )
-              })
-            }
-            <MdChangeCircle className="cng" onClick={()=>{setX(-300);}}/>      
-          </ResultItem>
-
-          <ResultItem dp={fileName.length < 1 ? 'none' : 'block'}>
-            <p className="title">첨부파일</p>        
-            {
-              fileName.map((item, i)=>{
-                return(
-                  <PaymentItem key={i}>
-                    <span>{item}</span>
-                  </PaymentItem>
-                )
-              })
-            }
-            <MdChangeCircle className="cng" onClick={()=>{setX(-400);}}/>      
-          </ResultItem>
-          
-          <ResultItem dp={mMax == null ? 'none' : 'block'}>
-            <p className="title">월 한도</p>
-            <p>{mMax}백만원</p>
-            <MdChangeCircle className="cng" onClick={()=>{setX(-500);}}/>
-          </ResultItem>
-            
-        </ResultInner>
-      </SideResultBox>
+        <LastButton dp={mMax == null ? 'none' : 'block'} onClick={() => { setModal(true) }}>제출하기</LastButton>
+      </ContactBox>
     </>
   )
 };
 
 export default Contact;
-
-        {/* <StepBox>
-          <StepInner>
-            <Circle bg={x == 0 ? '#50BCDF' : '#aaa'} scale={x == 0 ? 1.2 : null}>1</Circle>
-            <StepText fw={x == 0 ? 'bold' : null}>회사명</StepText>
-          </StepInner>
-          <Hr/>
-          <StepInner>
-            <Circle bg={x == -100 ? '#50BCDF' : '#aaa'} scale={x == -100 ? 1.2 : null}>2</Circle>
-            <StepText fw={x == -100 ? 'bold' : null}>연락처</StepText>
-          </StepInner>
-          <Hr/>
-          <StepInner>
-            <Circle bg={x == -200 ? '#50BCDF' : '#aaa'} scale={x == -200 ? 1.2 : null}>3</Circle>
-            <StepText fw={x == -200 ? 'bold' : null}>업종</StepText>
-          </StepInner>
-          <Hr/>
-          <StepInner>
-            <Circle bg={x == -300 ? '#50BCDF' : '#aaa'} scale={x == -300 ? 1.2 : null}>4</Circle>
-            <StepText fw={x == -300 ? 'bold' : null}>결제수단</StepText>
-          </StepInner>
-          <Hr/>
-          <StepInner>
-            <Circle bg={x == -400 ? '#50BCDF' : '#aaa'} scale={x == -400 ? 1.2 : null}>5</Circle>
-            <StepText fw={x == -400 ? 'bold' : null}>월 한도</StepText>
-          </StepInner>  
-        </StepBox> */}

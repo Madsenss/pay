@@ -616,7 +616,7 @@ const Admin = () => {
   );
   const findRead = contactData.data && contactData.data.filter(v => v.read === 'off');
   const searchFilter = contactData.data && contactData.data.filter((item) => {
-    return item.company.toUpperCase().includes(search.toUpperCase());
+    return item.company&&item.company.toUpperCase().includes(search&&search.toUpperCase());
   });
   const countData = useQuery(['countdata'], () => 
     axios.get('/todaycount').then((result) => {
