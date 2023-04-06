@@ -616,9 +616,9 @@ const Admin = () => {
   );
   const findRead = contactData.data && contactData.data.filter(v => v.read === 'off');
   const searchFilter = contactData.data && contactData.data.filter((item) => {
-    return item.company&&item.company.toUpperCase().includes(search&&search.toUpperCase());
+    return item.company && item.company.toUpperCase().includes(search && search.toUpperCase());
   });
-  const countData = useQuery(['countdata'], () => 
+  const countData = useQuery(['countdata'], () =>
     axios.get('/todaycount').then((result) => {
       return result.data;
     })
@@ -710,23 +710,23 @@ const Admin = () => {
 
   const platformCheck = () => {
     const filter = "win16|win32|win64|mac|macintel";
-    if(0>filter.indexOf(navigator.platform.toLowerCase())){
+    if (0 > filter.indexOf(navigator.platform.toLowerCase())) {
       return 'Mobile';
-    }else{
+    } else {
       return 'PC';
     }
   }
   const cookieCount = () => {
-    axios.post('/count', { platform : platformCheck().toString() });
+    axios.post('/count', { platform: platformCheck().toString() });
     document.cookie = 'cookieCheck=true'
   };
-  useEffect(()=>{
-    if(getCookie('cookieCheck') == 'true') {
-      document.cookie = `cookieCheck=true; Max-Age=${60 * 60 * 24}`; 
+  useEffect(() => {
+    if (getCookie('cookieCheck') == 'true') {
+      document.cookie = `cookieCheck=true; Max-Age=${60 * 60 * 24}`;
     } else {
       cookieCount();
     }
-  },[]);
+  }, []);
 
   return (
     <>
@@ -736,42 +736,46 @@ const Admin = () => {
             <img src="sample2.png" alt="logo" />
             <p className="visitor">방문자<span>&nbsp;{countData.data && countData.data.total}명</span></p>
             <p className="readoff">미확인<span>&nbsp;{findRead && findRead.length}건</span></p>
-            <MdMenu className={'icon menu ' + `${showSearch ? 'active' : null}`} onClick={() => { setShowSearch(!showSearch) }}/>
+            <MdMenu className={'icon menu ' + `${showSearch ? 'active' : null}`} onClick={() => { setShowSearch(!showSearch) }} />
           </NavLogo>
           <NavMenu x={showSearch ? '0%' : '-150%'}>
             <SearchBox>
-              <input type="text" className={showInput ? 'active' : null} onChange={handleSearch} placeholder="업체명을 입력하세요"/>
+              <input type="text" className={showInput ? 'active' : null} onChange={handleSearch} placeholder="업체명을 입력하세요" />
               <MdSearch className="icon" onClick={() => { setShowInput(!showInput) }} />
             </SearchBox>
             <MdPowerSettingsNew className="icon mr" onClick={() => {
-              navigate('/login')
+              axios.get('/logout').then(result => {
+                alert(result.data);
+                navigate('/login');
+              })
+              .catch();
             }} />
           </NavMenu>
         </NavBox>
         <SortBox>
-          
+
           <SortItem className="z">
             <MdOutlineChangeCircle className={'icon ' + `${sortActive ? 'active' : 'noneactive'}`} onClick={() => { setSortActive(!sortActive) }} />
           </SortItem>
 
           <SortItem className={sortActive ? 'x1' : 'hide'}>
-            <MdOutlineWatchLater className="icon" onClick={() => { setDataSort('new'); setSortActive(!sortActive); }}/>
-            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}><MdNorth/></ItemBadge>
+            <MdOutlineWatchLater className="icon" onClick={() => { setDataSort('new'); setSortActive(!sortActive); }} />
+            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}><MdNorth /></ItemBadge>
           </SortItem>
 
           <SortItem className={sortActive ? 'x2' : 'hide'}>
-            <MdOutlineWatchLater className="icon" onClick={() => { setDataSort('old'); setSortActive(!sortActive); }}/>
-            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}><MdSouth/></ItemBadge>
+            <MdOutlineWatchLater className="icon" onClick={() => { setDataSort('old'); setSortActive(!sortActive); }} />
+            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}><MdSouth /></ItemBadge>
           </SortItem>
 
           <SortItem className={sortActive ? 'x3' : 'hide'}>
-            <MdOutlineMonetizationOn className="icon" onClick={() => { setDataSort('high'); setSortActive(!sortActive); }}/>
-            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}><MdNorth/></ItemBadge>
+            <MdOutlineMonetizationOn className="icon" onClick={() => { setDataSort('high'); setSortActive(!sortActive); }} />
+            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}><MdNorth /></ItemBadge>
           </SortItem>
 
           <SortItem className={sortActive ? 'x4' : 'hide'}>
-            <MdOutlineMonetizationOn className="icon" onClick={() => { setDataSort('low'); setSortActive(!sortActive); }}/>
-            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}><MdSouth/></ItemBadge>
+            <MdOutlineMonetizationOn className="icon" onClick={() => { setDataSort('low'); setSortActive(!sortActive); }} />
+            <ItemBadge vi={sortActive ? 'visible' : 'hidden'}><MdSouth /></ItemBadge>
           </SortItem>
 
         </SortBox>
@@ -958,8 +962,8 @@ const Admin = () => {
       </AdminBox>
       {
         searchFilter && searchFilter.length === 0
-        ? <NullCompany>일치하는 업체명이 존재하지 않습니다</NullCompany>
-        : null
+          ? <NullCompany>일치하는 업체명이 존재하지 않습니다</NullCompany>
+          : null
       }
     </>
   )

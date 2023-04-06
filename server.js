@@ -117,9 +117,9 @@ app.post('/login', passport.authenticate('local', { failureRedirect: '/fail' }),
   res.send('good');
 });
 
-// app.get('/admin', Login, (req, res) => {
-//   res.sendFile(path.join(__dirname, '/react-project/build/index.html'));
-// })
+app.get('/admin', Login, (req, res) => {
+  res.sendFile(path.join(__dirname, '/client/build/index.html'));
+})
 
 app.get('/logout', function (req, res, next) {
   req.logout(function (err) {
