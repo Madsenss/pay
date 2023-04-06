@@ -67,7 +67,53 @@ const Form = styled.div`
   }
 `
 
-
+const TextareaBox = styled.div`
+  width: 500px;
+  height: 150px;
+  border: 1.5px solid #aaa;
+  border-radius: 3px;
+  font-size: 14px;
+  padding: 10px;
+  overflow-y: auto;
+  &:hover {
+    border: 1.5px solid rgb(138, 43, 226, 0.7);
+  }
+  ol {
+    margin: 0px;
+    padding: 0px 0px 0px 5px;
+    list-style: none;
+  }
+  li {
+    font-size: 13px;
+    padding-left: 10px;
+    margin-bottom: 5px;
+  }
+  .li {
+    padding-left: 20px;
+  }
+  .sub-title {
+    font-weight: bold;
+    color: rgb(138, 43, 226, 0.7);
+    margin-bottom: 5px;
+  }
+  .content {
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+  @media screen and (max-width: 800px) {
+    width: 250px;
+  }
+`
+const AgreeBox = styled.div`
+  padding-top: 20px;
+  width: 500px;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  @media screen and (max-width: 800px) {
+    width: 250px;
+  }
+`
 const TextInput = styled.input`
   display: ${props => props.dp};
   width: 230px;
@@ -97,7 +143,12 @@ const TextInput = styled.input`
     text-align: end;
     margin-right: 5px;
   }
-
+  &.company, .business{
+    display: block;
+  }
+  &.business {
+    margin-top: 10px;
+  }
 `
 const CheckBox = styled.div`
   display: flex;
@@ -380,7 +431,7 @@ const SubmitButton = styled.div`
     font-size: 22px;
     margin-right: 2px;
   }
-  
+
   &:hover {
     opacity: 0.6;
   }
@@ -487,6 +538,7 @@ const Contact = () => {
   const [fileName] = useState([]);
   const [modal, setModal] = useState(false);
   const [tolltip, setTolltip] = useState(false);
+  const [agree, setAgree] = useState(false);
   var filter = check.filter(v => v.value === 'checked');
   for (let i = 0; i < filter.length; i++) {
     payment.push(filter[i].key);
@@ -535,9 +587,9 @@ const Contact = () => {
           <SubmitInner>
 
             <SubmitItem>
-              <p className="title">회사명</p>
+              <p className="title">업체명</p>
               <p>{company}</p>
-              <MdChangeCircle className="cng" onClick={() => { setX(0); setModal(false); }} />
+              <MdChangeCircle className="cng" onClick={() => { setX(-100); setModal(false); }} />
             </SubmitItem>
 
             <SubmitItem>
@@ -648,12 +700,49 @@ const Contact = () => {
           </RBtnBox>
 
           <Form tx={x}>
-            <span className="title-top">업체명을 입력해 주세요</span>
-            <TextInput type="text" placeholder="업체명" onChange={handleCompany} />
+            <span className="title-top">개인정보 수집 및 이용 동의</span>
+            <div>
+              <TextareaBox>
+                <p className="sub-title">수집하는 개인정보</p>
+                <p className="content">UnoPay는 서비스 상담문의를 고객님의 개인정보를 수집하고 있습니다.</p>
+                <p className="content">서비스 상담문의를 위해 아래와 같은 개인정보를 수집하고 있습니다.</p>
+                <ol>
+                  <li>- 필수 수집항목 : 업체명, 사업자 등록번호, 연락처</li>
+                  <li>- 선택 수집항목 :</li>
+                  <li className="li">개인사업자 : 사업자등록증, 대표자신분증, 통장사본</li>
+                  <li className="li">법인사업자 : 사업자등록증, 법인등기부등본, 법인인감증명서, 통장사본, 주주명부</li>
+                  <li>- 수집방법 : 홈페이지 내 양식을 통해 이용자가 자발적으로 기입 및 서류 첨부</li>
+                </ol>
+                <p className="sub-title">개인정보의 수집 및 이용목적</p>
+                <p className="content">UnoPay는 수집한 개인정보를 다음의 목적을 위해 활용합니다.</p>
+                <ol>
+                  <li>- 고객문의, 민원처리, 본인확인, 문의 및 민원처리 등의 사실확인(추가확인 포함), 처리결과통보 등</li>
+                </ol>
+                <p className="sub-title">개인정보의 보유 및 이용기간</p>
+                <p className="content">원칙적으로, 개인정보 수집 및 이용목적이 달성된 후에는 해당 정보를 지체 없이 파기합니다.</p>
+                <p className="content">단, 관계법령의 규정에 의하여 보존할 필요가 있는 경우 UnoPay는 아래와 같이 관계법령에서 정한 일정한 기간 동안 회원정보를 보관합니다.</p>
+                <ol>
+                  <li>- 보존 항목 : 업체명, 사업자 등록번호, 연락처, 첨부 기능을 통해 첨부한 서류 파일 등</li>
+                  <li>- 보존 근거 : 소비자 보호 및 데이터 관리</li>
+                  <li>- 보존 기간 : 1년</li>
+                </ol>
+                <p className="content">소비자의 불만 또는 분쟁처리에 관한 기록 : 3년 (전자상거래등에서의 소비자보호에 관한 법률)</p>
+              </TextareaBox>
+              <AgreeBox>
+                <CheckBox>
+                  <MdCheck className={'cb ' + `${agree ? 'active' : null}`} onClick={() => {setAgree(!agree)}}/>
+                  <label>이 약관에 동의합니다.</label>
+                </CheckBox>
+              </AgreeBox>
+            </div>
           </Form>
           <Form tx={x}>
-            <span className="title-top">사업자등록번호를 입력해 주세요</span>
-            <TextInput type="number" placeholder="-를 제외하고 입력해 주세요" onChange={handleBusiness} />
+            <span className="title-top">업체 정보를 입력해 주세요</span>
+            <div className="cnb">
+              <TextInput className="company" type="text" placeholder="업체명" onChange={handleCompany} />
+              <TextInput className="business" type="number" placeholder="사업자등록번호" onChange={handleBusiness} />
+            </div>
+
           </Form>
           <Form tx={x}>
             <span className="title-top">연락처를 입력해 주세요</span>
@@ -724,7 +813,14 @@ const Contact = () => {
             </div>
           </Form>
         </FormBox>
-        <LastButton dp={mMax == null ? 'none' : 'block'} onClick={() => { setModal(true) }}>제출하기</LastButton>
+        <LastButton dp={mMax == null ? 'none' : 'block'} onClick={() => {
+          if(!agree) {
+            alert('개인정보 수집에 동의하셔야 합니다.');
+            setX(0);
+          } else {
+            setModal(true);
+          }
+        }}>제출하기</LastButton>
       </ContactBox>
     </>
   )
