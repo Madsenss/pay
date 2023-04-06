@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { MdArrowBackIos, MdArrowForwardIos, MdAttachFile, MdChangeCircle, MdCheck, MdClose, MdEditNote, MdLaptopMac, MdManageAccounts, MdOutlineFastfood, MdPrecisionManufacturing, MdSend} from "react-icons/md"
+import { MdArrowBackIos, MdArrowForwardIos, MdAttachFile, MdChangeCircle, MdCheck, MdClose, MdEditNote, MdLaptopMac, MdManageAccounts, MdOutlineFastfood, MdPrecisionManufacturing, MdSend } from "react-icons/md"
 import { GiLargeDress } from "react-icons/gi";
 
 
@@ -200,7 +200,7 @@ const RBtnBox = styled.div`
 `
 const LastButton = styled.div`
   position: absolute;
-  bottom: 20%;
+  bottom: 18%;
   display: ${props => props.dp};
   cursor: pointer;
   width: fit-content;
@@ -220,7 +220,7 @@ const LastButton = styled.div`
 
 
 const SubmitOverlay = styled.div`
-  display: ${props => props.dp};
+  display: flex;
   z-index: 998;
   width: 100%;
   height: 100vh;
@@ -228,6 +228,13 @@ const SubmitOverlay = styled.div`
   position: fixed;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease-in;
+  visibility: hidden;
+  opacity: 0;
+  &.show {
+    visibility: visible;
+    opacity: 1;
+  }
 `
 const BoxOuter = styled.div`
   position: absolute;
@@ -235,13 +242,21 @@ const BoxOuter = styled.div`
   height: 100vh;
   justify-content: center;
   align-items: center;
-  display: ${props => props.dp};
+  display: flex;
+  transition: all 0.3s ease-in;
+  visibility: hidden;
+  opacity: 0;
+  &.show {
+    visibility: visible;
+    opacity: 1;
+  }
 `
 const SubmitBox = styled.div`
   display: flex;
   align-items: center;
   text-align: center;
   position: absolute;
+  top: 110px;
   z-index: 999;
   padding: 50px 20px 25px 20px;
   background-color: #fff;
@@ -261,7 +276,9 @@ const SubmitBox = styled.div`
       opacity: 0.5;
     }
   }
-
+  @media screen and (max-width : 600px) {
+    top: 20px;
+  }
 `
 const SubmitInner = styled.div`
   width: fit-content;
@@ -358,22 +375,92 @@ const SubmitButton = styled.div`
   border-radius: 5px;
   font-size: 14px;
   font-weight: bold;
-  /* padding-right: 17px; */
   transition: all 0.3s;
-
   .icon {
     font-size: 22px;
-    margin-right: 5px;
+    margin-right: 2px;
   }
+  
   &:hover {
     opacity: 0.6;
   }
 `
 const Tolltip = styled.div`
+  z-index: 999;
   position: absolute;
-  width: 200px;
-  height: 400px;
-  background-color: red;
+  left: 0;
+  bottom: -25vh;
+  width: 300px;
+  height: fit-content;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 3px 6px 1.5px rgb(0, 0, 0, 0.2);
+  text-align: center;
+  padding: 10px 0px 10px 0px;
+  transition: all 0.2s;
+  opacity: 0;
+  visibility: hidden;
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 25%;
+    width: 0px;
+    height: 0;
+    border: 20px solid transparent;
+    /* border-bottom-color: rgb(173, 106, 235); */
+    border-bottom-color: #fff;
+    border-top: 0;
+    margin-left: -20px;
+    margin-top: -20px;
+  }
+  .individual {
+    vertical-align: top;
+    display: inline-block;
+    width: 50%;
+    height: 130px;
+  }
+  .business {
+    vertical-align: top;
+    display: inline-block;
+    width: 50%;
+    height: 130px;
+  }
+  .title {
+    font-weight: bold;
+    color: rgb(173, 106, 235);
+  }
+  .l-inner {
+    vertical-align: top;
+    width: 100%;
+
+  }
+  .r-inner {
+    vertical-align: top;
+    width: 100%;
+    border-left: 1.5px solid rgb(173, 106, 235);
+  }
+  p {
+    font-weight: bold;
+    font-size: 13px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  .file {
+    width: 100%;
+    color: rgb(173, 106, 235);
+    font-size: 12px;
+    font-weight: bold;
+  }
+  @media screen and (max-width : 1200px) {
+    visibility: visible;
+    opacity: 1;
+  }
+
 `
 
 const Contact = () => {
@@ -399,8 +486,8 @@ const Contact = () => {
   const [url, setURL] = useState(null);
   const [fileName] = useState([]);
   const [modal, setModal] = useState(false);
-
-  var filter = check.filter(v => v.value == 'checked');
+  const [tolltip, setTolltip] = useState(false);
+  var filter = check.filter(v => v.value === 'checked');
   for (let i = 0; i < filter.length; i++) {
     payment.push(filter[i].key);
   }
@@ -441,8 +528,8 @@ const Contact = () => {
 
   return (
     <>
-      <SubmitOverlay dp={modal ? 'flex' : 'none'} onClick={() => { setModal(false); }} />
-      <BoxOuter dp={modal ? 'flex' : 'none'}>
+      <SubmitOverlay className={modal ? 'show' : null} onClick={() => { setModal(false); }} />
+      <BoxOuter className={modal ? 'show' : null}>
         <SubmitBox>
           <MdClose className="close-btn" onClick={() => { setModal(false); }} />
           <SubmitInner>
@@ -493,15 +580,14 @@ const Contact = () => {
 
             <form method="POST" action="/uploadfile" encType="multipart/form-data" acceptCharset="UTF-8">
               <SubmitButtonBox>
-                <SubmitButton>
-                  <Tolltip></Tolltip>
+                <SubmitButton onMouseEnter={() => { setTolltip(true) }} onMouseLeave={() => { setTolltip(false) }}>
                   <label for="file">
                     <MdAttachFile className="icon" />
                     첨부파일
                   </label>
                 </SubmitButton>
-                <input type="file" name="filename" id="file" acceptCharset="UTF-8" onChange={handleFile} multiple/>
-                <SubmitButton type="submit" onClick={() => {                
+                <input type="file" name="filename" id="file" acceptCharset="UTF-8" onChange={handleFile} multiple />
+                <SubmitButton type="submit" onClick={() => {
                   axios.post('/uploaddata', {
                     company: company,
                     bn: business,
@@ -526,6 +612,27 @@ const Contact = () => {
             </form>
 
           </SubmitInner>
+          <Tolltip className={tolltip ? 'show' : null}>
+            <div className="individual">
+              <span className="title">개인사업자</span>
+              <div className="l-inner">
+                <p>사업자등록증</p>
+                <p>대표자신분증</p>
+                <p>통장사본</p>
+              </div>
+            </div>
+            <div className="business">
+              <span className="title">법인사업자</span>
+              <div className="r-inner">
+                <p>사업자 등록증</p>
+                <p>법인등기부등본</p>
+                <p>법인인감증명서</p>
+                <p>통장사본</p>
+                <p>주주명부</p>
+              </div>
+            </div>
+            <span className="file">확장자 : JPG, JPEG, PNG, PDF | 없을 시 미첨부</span>
+          </Tolltip>
         </SubmitBox>
       </BoxOuter>
 
@@ -556,32 +663,32 @@ const Contact = () => {
             <span className="title">업종을 선택해 주세요</span>
             <div>
               <SelectBox>
-                <SelectItem className={category == '전자' ? 'active' : null} onClick={() => { setCategory('전자') }}>
+                <SelectItem className={category === '전자' ? 'active' : null} onClick={() => { setCategory('전자') }}>
                   <MdLaptopMac className="icon" />
                   <p>전자</p>
                 </SelectItem>
-                <SelectItem className={category == '제조' ? 'active' : null} onClick={() => { setCategory('제조') }}>
+                <SelectItem className={category === '제조' ? 'active' : null} onClick={() => { setCategory('제조') }}>
                   <MdPrecisionManufacturing className="icon" />
                   <p>제조</p>
                 </SelectItem>
-                <SelectItem className={category == '의류' ? 'active' : null} onClick={() => { setCategory('의류') }}>
+                <SelectItem className={category === '의류' ? 'active' : null} onClick={() => { setCategory('의류') }}>
                   <GiLargeDress className="icon" />
                   <p>의류</p>
                 </SelectItem>
-                <SelectItem className={category == '식품' ? 'active' : null} onClick={() => { setCategory('식품') }}>
+                <SelectItem className={category === '식품' ? 'active' : null} onClick={() => { setCategory('식품') }}>
                   <MdOutlineFastfood className="icon" />
                   <p>식품</p>
                 </SelectItem>
-                <SelectItem className={category == '서비스' ? 'active' : null} onClick={() => { setCategory('서비스') }}>
+                <SelectItem className={category === '서비스' ? 'active' : null} onClick={() => { setCategory('서비스') }}>
                   <MdManageAccounts className="icon" />
                   <p>서비스</p>
                 </SelectItem>
-                <SelectItem className={category == '기타' ? 'active' : null} onClick={() => { setCategory('기타') }}>
+                <SelectItem className={category === '기타' ? 'active' : null} onClick={() => { setCategory('기타') }}>
                   <MdEditNote className="icon" />
                   <p>기타</p>
                 </SelectItem>
               </SelectBox>
-              <TextInput dp={category == '기타' ? 'block' : 'none'} className="another" onChange={handleAnother} placeholder="업종명을 입력해 주세요" />
+              <TextInput dp={category === '기타' ? 'block' : 'none'} className="another" onChange={handleAnother} placeholder="업종명을 입력해 주세요" />
             </div>
           </Form>
           <Form tx={x}>
@@ -592,9 +699,9 @@ const Contact = () => {
                   check.map((item, i) => {
                     return (
                       <CheckBox key={i}>
-                        <MdCheck className={'cb ' + `${check[i].value == 'checked' ? 'active' : null}`} onClick={() => {
+                        <MdCheck className={'cb ' + `${check[i].value === 'checked' ? 'active' : null}`} onClick={() => {
                           var copy = [...check];
-                          if (copy[i].value == 'none') {
+                          if (copy[i].value === 'none') {
                             copy[i].value = 'checked'
                           } else {
                             copy[i].value = 'none'
@@ -607,7 +714,7 @@ const Contact = () => {
                   })
                 }
               </div>
-              <TextInput dp={check[7].value == 'checked' ? 'block' : 'none'} className="url" onChange={handleURL} placeholder="URL이 있으시면 입력해 주세요" />
+              <TextInput dp={check[7].value === 'checked' ? 'block' : 'none'} className="url" onChange={handleURL} placeholder="URL이 있으시면 입력해 주세요" />
             </div>
           </Form>
           <Form tx={x}>
