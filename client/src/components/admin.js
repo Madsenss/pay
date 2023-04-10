@@ -168,7 +168,7 @@ const AdminBox = styled.div`
   padding-top: 150px;
   width: 100%;
   height: fit-content;
-  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
   display: flex;
   align-items: center;
   justify-content: center;

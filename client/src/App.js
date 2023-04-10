@@ -9,18 +9,26 @@ import Login from "./components/login";
 import Nav from "./components/nav";
 import Fail from "./components/fail";
 import FailPath from "./components/failpath";
+import GlobalStyle from "./components/globalstyle";
+import { useEffect } from "react";
 
 function App() {
-
+  const setScreenSize = () => {
+    var vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+  useEffect(()=>{
+    setScreenSize();
+  });
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<><Nav/><Banner/><KakaoChat/><Footer/></>}/>
-        <Route path="*" element={<><FailPath/></>}/>
-        <Route path="fail" element={<><Fail/></>}/>
-        <Route path="/contact" element={<><Nav/><Contact/><Back/></>}/>
-        <Route path="/login" element={<><Login/></>}/>
-        <Route path="/admin" element={<><Admin/></>}/>
+        <Route path="/" element={<><GlobalStyle/><Nav/><Banner/><KakaoChat/><Footer/></>}/>
+        <Route path="*" element={<><GlobalStyle/><FailPath/></>}/>
+        <Route path="fail" element={<><GlobalStyle/><Fail/></>}/>
+        <Route path="/contact" element={<><GlobalStyle/><Nav/><Contact/><Back/></>}/>
+        <Route path="/login" element={<><GlobalStyle/><Login/></>}/>
+        <Route path="/admin" element={<><GlobalStyle/><Admin/></>}/>
       </Routes>
     </div>
   );

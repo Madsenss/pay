@@ -274,7 +274,7 @@ const SubmitOverlay = styled.div`
   display: flex;
   z-index: 998;
   width: 100%;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   background-color: rgb(0, 0, 0, 0.2);
   position: fixed;
   align-items: center;
@@ -290,7 +290,7 @@ const SubmitOverlay = styled.div`
 const BoxOuter = styled.div`
   position: absolute;
   width: 100%;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   justify-content: center;
   align-items: center;
   display: flex;
@@ -676,7 +676,7 @@ const Contact = () => {
             <div className="business">
               <span className="title">법인사업자</span>
               <div className="r-inner">
-                <p>사업자 등록증</p>
+                <p>사업자등록증</p>
                 <p>법인등기부등본</p>
                 <p>법인인감증명서</p>
                 <p>통장사본</p>
