@@ -72,7 +72,7 @@ const Login = () => {
     <>
       <LoginBox>
         <LoginInner>
-          <img src="sample2.png" alt="logo" />
+          <img src="slp.png" alt="logo" />
           <input type="text" placeholder="ID" onChange={handleID} />
           <input type="password" placeholder="Password" onChange={handlePassword} />
           <SubmitButton onClick={() => {

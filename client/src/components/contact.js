@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { MdArrowBackIos, MdArrowForwardIos, MdAttachFile, MdChangeCircle, MdCheck, MdClose, MdEditNote, MdLaptopMac, MdManageAccounts, MdOutlineFastfood, MdPrecisionManufacturing, MdSend } from "react-icons/md"
@@ -32,6 +32,14 @@ const FormBox = styled.div`
   @media screen and (max-width: 600px) {
     width: 100%;
     height: 60%;
+  }
+  &.start {
+    opacity: 0;
+    transition: 0.3s;
+  }
+  &.end {
+    opacity: 1;
+    transition : 0.3s;
   }
 `
 const Form = styled.div`
@@ -69,7 +77,7 @@ const Form = styled.div`
 
 const TextareaBox = styled.div`
   width: 500px;
-  height: 150px;
+  height: 200px;
   border: 1.5px solid #aaa;
   border-radius: 3px;
   font-size: 14px;
@@ -101,7 +109,7 @@ const TextareaBox = styled.div`
     margin-bottom: 5px;
   }
   @media screen and (max-width: 800px) {
-    width: 250px;
+    width: 270px;
   }
 `
 const AgreeBox = styled.div`
@@ -111,7 +119,7 @@ const AgreeBox = styled.div`
   display: flex;
   justify-content: center;
   @media screen and (max-width: 800px) {
-    width: 250px;
+    width: 270px;
   }
 `
 const TextInput = styled.input`
@@ -515,7 +523,7 @@ const Tolltip = styled.div`
 `
 
 const Contact = () => {
-
+  const [fade, setFade] = useState('');
   const [x, setX] = useState(0);
   const [company, setCompany] = useState(null);
   const [business, setBusiness] = useState(null);
@@ -577,7 +585,12 @@ const Contact = () => {
     if (x === -500) { return null };
     setX(x - 100);
   };
-
+  useEffect(()=>{
+    setTimeout(()=>{ setFade('end') }, 400)
+  return ()=>{
+    setFade('')
+  }
+  }, [x])
   return (
     <>
       <SubmitOverlay className={modal ? 'show' : null} onClick={() => { setModal(false); }} />
@@ -690,7 +703,7 @@ const Contact = () => {
 
 
       <ContactBox>
-        <FormBox>
+        <FormBox className={'start ' + fade}>
 
           <LBtnBox className="lbtn">
             <MdArrowBackIos className="icon" onClick={() => { prev(); }} />
@@ -700,7 +713,7 @@ const Contact = () => {
           </RBtnBox>
 
           <Form tx={x}>
-            <span className="title-top">개인정보 수집 및 이용 동의</span>
+            <span className="title">개인정보 수집 및 이용 동의</span>
             <div>
               <TextareaBox>
                 <p className="sub-title">수집하는 개인정보</p>

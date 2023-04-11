@@ -1,25 +1,29 @@
 import styled from "styled-components";
 
 const FooterBox = styled.div`
+  z-index: 999;
   position: fixed;
   width: 100%;
   height: fit-content;
   bottom: 0px;
-  background-color: rgb(138, 43, 226, 0.7);
-  color: rgb(0, 255, 0, 1);
+  background-color: rgb(150, 150, 150, 0.2);
+  color: rgb(138, 43, 226, 0.7);
+  overflow-x: hidden;
+  overflow-y: hidden;
   font-weight: bold;
-
+  font-size: 12px;
   .animated-title {
     position: relative;
     width: 100%;
     max-width:100%;
-    height: 25px;
+    height: 2vh;
     display: flex;
     align-items: center;
     overflow-x: hidden;
     overflow-y: hidden;
   }
   .track {
+    letter-spacing: 1px;
     position: absolute;
     white-space: nowrap;
     animation: marquee 60s linear infinite;

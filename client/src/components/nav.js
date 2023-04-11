@@ -2,37 +2,17 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const NavBox = styled.div`
+  z-index: 999;
   width: 100%;
-  height: 70px;
+  height: 50px;
   background-color: transparent;
   position: fixed;
   display: flex;
   align-items: center;
-`
-const NavLogo = styled.div`
-  width: 20%;
-  height: fit-content;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  padding-left: 200px;
   img {
     cursor: pointer;
-    width: 180px;
-  }
-
-`
-const NavMenu = styled.div`
-  width: 80%;
-  height: fit-content;
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  padding-right: 200px;
-  p {
-    cursor: pointer;
-    font-size: 16px;
-    padding: 0px 15px 0px 15px;
+    width: 150px;
   }
 `
 const Nav = () => {
@@ -40,12 +20,7 @@ const Nav = () => {
   return (
     <>
       <NavBox>
-        <NavLogo>
-          <img src="sample2.png" alt="logo" onClick={()=>{(navigate('/'))}}/>
-        </NavLogo>
-        <NavMenu className="right">
-          <p onClick={()=>{navigate('/contact')}}>상담 신청</p>
-        </NavMenu>
+        <img src="slp.png" alt="logo" onClick={()=>{(navigate('/'))}}/>
       </NavBox>
     </>
   )

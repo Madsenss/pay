@@ -3,51 +3,53 @@ import styled from "styled-components";
 
 const BannerBox = styled.div`
   width: 100%;
-  height: 600px;
-  border: 1px solid black;
-  .left {
+  height: calc(var(--vh, 1vh) * 100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* background-image: url('임시.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover; */
+  p {
     position: absolute;
-    top: 25%;
-    left: 18%;
-    border: 1px solid red;
-    font-size: 24px;
-  }
-  .right {
-    position: absolute;
-    top: 24%;
-    right: 25%;
-    border: 1px solid blue;
-    font-size: 24px;
-  }
-  img {
-    display: block;
-    margin: auto;
-    width: 500px;
+    font-size: 2.5rem;
+    font-weight: bold;
+    &.t {
+      top: 20%;
+    }
+    &.b {
+      top: 28%;
+    }
   }
 `
-const BannerBtn = styled.button`
-  width: 120px;
-  height: 40px;
-  display: block;
-  margin: auto;
-  font-size: 16px;
-  background-color: #50BCDF;
-  color: white;
-  border: 1px solid lightblue;
-  border-radius: 5%;
+const ContactButton = styled.div`
+  position: absolute;
+  bottom: 15%;
   cursor: pointer;
+  width: fit-content;
+  height: fit-content;
+  padding: 10px 20px 10px 20px;
+  text-align: center;
+  background-color: rgb(138, 43, 226, 0.7);
+  box-shadow: 0px 0px 6px 1px rgb(0, 0, 0, 0.2);
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  transition: all 0.3s;
+  &:hover {
+    opacity: 0.7;
+  }
 `
 const Banner = () => {
   const navigate = useNavigate();
   return (
     <>
       <BannerBox>
-        <div className="left">결제 방식은 다양한데<br/>쉽고 빠른 서비스가 있을까?<br/>Hip하고 Easy한 PG서비스<br/>NagumPay</div>
-        <div className="right">신용카드<br/>SMS결제<br/>네이버페이<br/>카카오페이<br/>PAYCO까지</div>
-        <img src="banner2.png"/>
-        <BannerBtn onClick={()=>{navigate('/contact')}}>신청하기</BannerBtn>
-
-
+        <p className="t">결제방식의 모든 것</p>
+        <p className="b">UnoPay로 시작하기</p>
+        <ContactButton onClick={()=>{navigate('/contact')}}>신청하기</ContactButton>
       </BannerBox>
     </>
   )

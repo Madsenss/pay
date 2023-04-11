@@ -733,7 +733,7 @@ const Admin = () => {
       <AdminBox>
         <NavBox>
           <NavLogo>
-            <img src="sample2.png" alt="logo" />
+            <img src="slp.png" alt="logo" />
             <p className="visitor">방문자<span>&nbsp;{countData.data && countData.data.total}명</span></p>
             <p className="readoff">미확인<span>&nbsp;{findRead && findRead.length}건</span></p>
             <MdMenu className={'icon menu ' + `${showSearch ? 'active' : null}`} onClick={() => { setShowSearch(!showSearch) }} />
