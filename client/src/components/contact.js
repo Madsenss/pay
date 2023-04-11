@@ -84,7 +84,7 @@ const TextareaBox = styled.div`
   padding: 10px;
   overflow-y: auto;
   &:hover {
-    border: 1.5px solid rgb(138, 43, 226, 0.7);
+    border: 1.5px solid rgb(173, 106, 235);
   }
   ol {
     margin: 0px;
@@ -101,7 +101,7 @@ const TextareaBox = styled.div`
   }
   .sub-title {
     font-weight: bold;
-    color: rgb(138, 43, 226, 0.7);
+    color: rgb(173, 106, 235);
     margin-bottom: 5px;
   }
   .content {
@@ -136,7 +136,7 @@ const TextInput = styled.input`
   }
   &:focus {
     outline: none;
-    border: 1.5px solid rgb(138, 43, 226, 0.7);
+    border: 1.5px solid rgb(173, 106, 235);
   }
   &.another {
     width: 235px;
@@ -166,13 +166,13 @@ const CheckBox = styled.div`
     cursor: pointer;
     width: 15px;
     height: 15px;
-    border: 1.5px solid rgb(138, 43, 226, 0.7);
+    border: 1.5px solid rgb(173, 106, 235);
     background-color: rgb(205, 205, 205, 0.1);
     border-radius: 2px;
     margin-right: 10px;
     color: rgb(205, 205, 205, 0.5);
     &.active {
-      background-color: rgb(138, 43, 226, 0.7);
+      background-color: rgb(173, 106, 235);
       color: #fff;
     }
   }
@@ -210,11 +210,14 @@ const SelectItem = styled.div`
     bottom: 8px;
   }
   &:hover {
-    border: 1.5px solid rgb(138, 43, 226, 0.7);
+    border: 1.5px solid rgb(173, 106, 235);
   }
   &.active {
     box-shadow: inset 0px 0px 4px 4px rgb(0, 0, 0, 0.3);
     opacity: 0.5;
+  }
+  &.active:hover {
+    border: 1.5px solid #eee;
   }
 `
 
@@ -234,7 +237,7 @@ const LBtnBox = styled.div`
     cursor: pointer;
     font-size: 40px;
     &:hover {
-      color: rgb(138, 43, 226, 0.7);
+      color: rgb(173, 106, 235);
     }
   }
 `
@@ -253,7 +256,7 @@ const RBtnBox = styled.div`
     cursor: pointer;
     font-size: 40px;
     &:hover {
-      color: rgb(138, 43, 226, 0.7);
+      color: rgb(173, 106, 235);
     }
   }
 `
@@ -266,7 +269,7 @@ const LastButton = styled.div`
   height: fit-content;
   padding: 8px 18px 8px 18px;
   text-align: center;
-  background-color: rgb(138, 43, 226, 0.7);
+  background-color: rgb(173, 106, 235);
   box-shadow: 0px 1px 3px 2px rgb(0, 0, 0, 0.1);
   border-radius: 6px;
   color: white;
@@ -329,7 +332,7 @@ const SubmitBox = styled.div`
     top: 6px;
     right: 6px;
     font-size: 26px;
-    color: rgb(138, 43, 226, 0.7);
+    color: rgb(173, 106, 235);
     transition: all 0.3s;
     &:hover {
       opacity: 0.5;
@@ -374,7 +377,7 @@ const SubmitItem = styled.div`
     font-size: 22px;
     background-color: #fff;
     border-radius: 50%;
-    color: rgb(138, 43, 226, 0.7);
+    color: rgb(173, 106, 235);
     cursor: pointer;
     transition: all 0.3s;
     &:hover {
@@ -386,7 +389,7 @@ const PaymentItem = styled.div`
   width: 29%;
   height: 25px;
   margin: 5px 4px 0px 4px;
-  background-color: rgb(138, 43, 226, 0.7);
+  background-color: rgb(173, 106, 235);
   box-shadow: 0px 0px 1px 1px rgb(0, 0, 0, 0.2);
   color: #fff;
   border-radius: 5px;
@@ -585,12 +588,14 @@ const Contact = () => {
     if (x === -500) { return null };
     setX(x - 100);
   };
+
   useEffect(()=>{
     setTimeout(()=>{ setFade('end') }, 400)
   return ()=>{
     setFade('')
   }
   }, [x])
+
   return (
     <>
       <SubmitOverlay className={modal ? 'show' : null} onClick={() => { setModal(false); }} />

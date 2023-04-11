@@ -19,7 +19,7 @@ const BackBox = styled.div`
   cursor: pointer;
   &:hover {
     background-color: transparent;
-    color: rgb(138, 43, 226, 0.7);
+    color: rgb(173, 106, 235);
     transform: translateX(-10px);
   }
 `

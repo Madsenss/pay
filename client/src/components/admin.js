@@ -19,7 +19,7 @@ const NavBox = styled.div`
   .icon {
     font-size: 28px;
     cursor: pointer;
-    color: rgb(138, 43, 226, 0.7);
+    color: rgb(173, 106, 235);
     margin-right: 10px;
     transition: all 0.3s;
     &:hover {
@@ -66,7 +66,7 @@ const NavLogo = styled.div`
     }
   }
   p {
-    color: rgb(138, 43, 226, 0.7);
+    color: rgb(173, 106, 235);
     margin-left: 20px;
   }
   span {
@@ -120,7 +120,7 @@ const NavMenu = styled.div`
     margin-top: 15px;
     box-shadow: 2px 2px 6px 1px rgb(0, 0, 0, 0.2);
     background-color: #fff;
-    border: 2px solid rgb(138, 43, 226, 0.7);
+    border: 2px solid rgb(173, 106, 235);
     border-radius: 15px;
     padding: 10px 0px 10px 0px;
     transform: translateY(${props => props.x});
@@ -152,7 +152,7 @@ const SearchBox = styled.div`
   }
   input:focus {
     outline: none;
-    border: 1.5px solid rgb(138, 43, 226, 0.7);
+    border: 1.5px solid rgb(173, 106, 235);
   }
   input:focus::placeholder {
     color: transparent;
@@ -203,7 +203,7 @@ const ContactItem = styled.div`
     margin-bottom: 50px;
   }
   &:hover {
-    border: 2px solid rgb(138, 43, 226, 0.7);
+    border: 2px solid rgb(173, 106, 235);
   }
 `
 const ContentBox = styled.div`
@@ -215,7 +215,7 @@ const ContentBox = styled.div`
   .bold {
     font-weight: bold;
     margin-right: 10px;
-    color: rgb(138, 43, 226, 0.7);
+    color: rgb(173, 106, 235);
   }
   .pay {
     height: 50px;
@@ -233,7 +233,7 @@ const ContentBox = styled.div`
   }
   .payitem {
     display: inline-block;
-    background-color: rgb(138, 43, 226, 0.7);
+    background-color: rgb(173, 106, 235);
     color: white;
     margin-right: 5px;
     margin-bottom: 5px;
@@ -268,7 +268,7 @@ const DialBox = styled.div`
     font-size: 30px;
     position: absolute;
     cursor: pointer;
-    color: rgb(138, 43, 226, 0.7);
+    color: rgb(173, 106, 235);
   }
 
   .y1 {
@@ -312,7 +312,7 @@ const ToggleBox = styled.div`
     margin-right: 10px;
   }
   .on {
-    color: rgb(138, 43, 226, 0.7);
+    color: rgb(173, 106, 235);
   }
 `
 
@@ -347,7 +347,7 @@ const DeleteBox = styled.div`
     cursor: pointer;
     width: 50px;
     padding: 3px;
-    background-color: rgb(138, 43, 226, 0.7);
+    background-color: rgb(173, 106, 235);
     border-radius: 10px;
     color: white;
     border: none;
@@ -379,7 +379,7 @@ const MemoBox = styled.div`
     position: absolute;
     bottom: 5px;
     right: 45px;
-    color: rgb(138, 43, 226, 0.7);
+    color: rgb(173, 106, 235);
     cursor: pointer;
   }
   .close {
@@ -387,7 +387,7 @@ const MemoBox = styled.div`
     position: absolute;
     bottom: 5px;
     right: 10px;
-    color: rgb(138, 43, 226, 0.7);
+    color: rgb(173, 106, 235);
     cursor: pointer;
   }
   textarea {
@@ -426,7 +426,7 @@ const MemoIcon = styled.div`
   font-size: 30px;
   position: absolute;
   cursor: pointer;
-  color: rgb(138, 43, 226, 0.7);
+  color: rgb(173, 106, 235);
 `
 
 const FileBox = styled.div`
@@ -452,7 +452,7 @@ const FileBox = styled.div`
     position: absolute;
     top: 5px;
     right: 5px;
-    color: rgb(138, 43, 226, 0.7);
+    color: rgb(173, 106, 235);
     cursor: pointer;
   }
 `
@@ -463,7 +463,7 @@ const FileItem = styled.div`
     width: fit-content;
     height: fit-content;
     text-decoration: none;
-    background-color: rgb(138, 43, 226, 0.7);
+    background-color: rgb(173, 106, 235);
     color: white;
     font-size: 13px;
     font-weight: bold;
@@ -484,7 +484,7 @@ const SortBox = styled.div`
   .icon {
     font-size: 35px;
     cursor: pointer;
-    color: rgb(138, 43, 226, 0.7);
+    color: rgb(173, 106, 235);
     @media screen and (max-width: 800px) {
       font-size: 30px;
     }
@@ -573,7 +573,7 @@ const NullCompany = styled.div`
 
   box-shadow: 2px 2px 6px 1px rgb(0, 0, 0, 0.2);
   background-color: #fff;
-  border: 2px solid rgb(138, 43, 226, 0.7);
+  border: 2px solid rgb(173, 106, 235);
   border-radius: 15px;
 
   font-weight: bold;

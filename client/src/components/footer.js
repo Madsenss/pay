@@ -7,7 +7,7 @@ const FooterBox = styled.div`
   height: fit-content;
   bottom: 0px;
   background-color: rgb(150, 150, 150, 0.2);
-  color: rgb(138, 43, 226, 0.7);
+  color: rgb(173, 106, 235);
   overflow-x: hidden;
   overflow-y: hidden;
   font-weight: bold;
@@ -16,7 +16,7 @@ const FooterBox = styled.div`
     position: relative;
     width: 100%;
     max-width:100%;
-    height: 2vh;
+    height: 2.5vh;
     display: flex;
     align-items: center;
     overflow-x: hidden;

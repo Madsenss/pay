@@ -3,8 +3,8 @@ import styled from "styled-components";
 
 const KakaoBox = styled.div`
   position: fixed;
-  bottom: 45px;
-  right: 30px;
+  bottom: 35px;
+  right: 20px;
 `
 
 const KakaoChat = () => {
